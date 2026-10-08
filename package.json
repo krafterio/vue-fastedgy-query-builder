@@ -1,0 +1,65 @@
+{
+    "name": "vue-fastedgy-query-builder",
+    "version": "1.0.0",
+    "description": "Query builder for the lists of FastEdgy applications: nested filters read from the metadata, custom views and their favorites",
+    "type": "module",
+    "main": "./index.js",
+    "sideEffects": ["./styles/*.css", "./labels.js", "./inputs.js"],
+    "types": "./types/index.d.ts",
+    "license": "MIT",
+    "exports": {
+        ".": {
+            "import": "./index.js",
+            "types": "./types/index.d.ts"
+        },
+        "./styles.css": "./styles/query-builder.css",
+        "./icons/lucide": "./icons/lucide.js"
+    },
+    "scripts": {
+        "build": "vue-tsc -p tsconfig.json",
+        "lint": "npm run build && oxlint . --type-aware",
+        "fix": "oxlint --fix",
+        "format": "oxfmt --write index.js plugin.js catalog.js dates.js labels.js inputs.js icons components composables locales tests vitest.config.js vitest.setup.js",
+        "fcl": "npm run fix && npm run format && npm run lint",
+        "test": "vitest run",
+        "test:watch": "vitest"
+    },
+    "peerDependencies": {
+        "@lucide/vue": "^1.0.0",
+        "reka-ui": "^2.10.0",
+        "vue": "^3.5.0",
+        "vue-fastedgy": "*"
+    },
+    "peerDependenciesMeta": {
+        "@lucide/vue": {
+            "optional": true
+        }
+    },
+    "devDependencies": {
+        "@lucide/vue": "^1.0.0",
+        "@types/node": "^26.5.0",
+        "@vitejs/plugin-vue": "^6.0.8",
+        "@vue/test-utils": "^2.4.4",
+        "jsdom": "^30.0.1",
+        "oxfmt": "^0.67.0",
+        "oxlint": "^1.82.0",
+        "oxlint-tsgolint": "^7.0.2001",
+        "pinia": "^4.0.3",
+        "reka-ui": "^2.10.4",
+        "typescript": "^6.0.3",
+        "vitest": "^5.0.0",
+        "vue": "^3.5.42",
+        "vue-fastedgy": "github:krafterio/vue-fastedgy#main",
+        "vue-i18n": "^11.1.12",
+        "vue-router": "^5.0.0",
+        "vue-tsc": "^3.3.11"
+    },
+    "engines": {
+        "node": ">=24.0.0"
+    },
+    "allowScripts": {
+        "esbuild": false,
+        "fsevents": false,
+        "vue-demi": false
+    }
+}
