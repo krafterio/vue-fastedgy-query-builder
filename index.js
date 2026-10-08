@@ -1,5 +1,4 @@
 import './labels.js';
-import './inputs.js';
 
 export { default as QueryFilter } from './components/QueryFilter.vue';
 export { default as QueryBuilder } from './components/QueryBuilder.vue';

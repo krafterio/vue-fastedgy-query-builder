@@ -38,7 +38,7 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
         default: string;
     };
 }>> & Readonly<{}>, {
-    option: Record<string, any>;
     path: string;
+    option: Record<string, any>;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=QueryFilterValue.vue.d.ts.map

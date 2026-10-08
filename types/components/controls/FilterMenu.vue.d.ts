@@ -43,7 +43,7 @@ declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPro
         default: () => never[];
     };
 }>> & Readonly<{}>, {
-    items: unknown[];
     label: string;
+    items: unknown[];
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=FilterMenu.vue.d.ts.map

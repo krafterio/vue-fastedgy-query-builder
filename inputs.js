@@ -8,26 +8,29 @@ import ReferenceInput from './components/inputs/ReferenceInput.vue';
 import RelationInput from './components/inputs/RelationInput.vue';
 import TextInput from './components/inputs/TextInput.vue';
 import TimeInput from './components/inputs/TimeInput.vue';
-import { registerFilterInput } from './composables/registry.js';
 
-// The package's own inputs, registered at import so an application registering
-// its own afterwards replaces any of them for the rules it matches.
-registerFilterInput({ kinds: ['text'] }, TextInput);
-registerFilterInput({ kinds: ['number'] }, NumberInput);
-registerFilterInput({ kinds: ['date'] }, DateInput);
-registerFilterInput({ kinds: ['time'] }, TimeInput);
-registerFilterInput({ kinds: ['datetime'] }, DateTimeInput);
-registerFilterInput({ kinds: ['choice'] }, ChoiceInput);
-registerFilterInput({ kinds: ['single', 'multiple'] }, RelationInput);
-registerFilterInput({ kinds: ['reference'] }, ReferenceInput);
-registerFilterInput({ kinds: ['text', 'number'], arity: 'list' }, ListInput);
-registerFilterInput({ kinds: ['number', 'date', 'time'], arity: 'two' }, RangeInput);
-registerFilterInput({ kinds: ['datetime'], arity: 'two' }, DateTimeInput);
-registerFilterInput({ kinds: ['choice'], arity: 'list' }, ChoiceInput);
-registerFilterInput({ kinds: ['single', 'multiple'], arity: 'list' }, RelationInput);
-registerFilterInput({ kinds: ['reference'], arity: 'list' }, ReferenceInput);
-registerFilterInput({ kinds: ['single'], operators: ['<', '<=', '>', '>='] }, NumberInput);
-registerFilterInput({ kinds: ['single'], operators: ['between'] }, RangeInput);
+/**
+ * The package's own inputs, read by the registry before any an application
+ * registers, which replace them for the rules they match.
+ */
+export const defaultFilterInputs = [
+    [{ kinds: ['text'] }, TextInput],
+    [{ kinds: ['number'] }, NumberInput],
+    [{ kinds: ['date'] }, DateInput],
+    [{ kinds: ['time'] }, TimeInput],
+    [{ kinds: ['datetime'] }, DateTimeInput],
+    [{ kinds: ['choice'] }, ChoiceInput],
+    [{ kinds: ['single', 'multiple'] }, RelationInput],
+    [{ kinds: ['reference'] }, ReferenceInput],
+    [{ kinds: ['text', 'number'], arity: 'list' }, ListInput],
+    [{ kinds: ['number', 'date', 'time'], arity: 'two' }, RangeInput],
+    [{ kinds: ['datetime'], arity: 'two' }, DateTimeInput],
+    [{ kinds: ['choice'], arity: 'list' }, ChoiceInput],
+    [{ kinds: ['single', 'multiple'], arity: 'list' }, RelationInput],
+    [{ kinds: ['reference'], arity: 'list' }, ReferenceInput],
+    [{ kinds: ['single'], operators: ['<', '<=', '>', '>='] }, NumberInput],
+    [{ kinds: ['single'], operators: ['between'] }, RangeInput],
+];
 
 export {
     ChoiceInput,

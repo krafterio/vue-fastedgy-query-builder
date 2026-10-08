@@ -4,7 +4,7 @@
     "description": "Query builder for the lists of FastEdgy applications: nested filters read from the metadata, custom views and their favorites",
     "type": "module",
     "main": "./index.js",
-    "sideEffects": ["./styles/*.css", "./labels.js", "./inputs.js"],
+    "sideEffects": ["./styles/*.css", "./labels.js"],
     "types": "./types/index.d.ts",
     "license": "MIT",
     "exports": {

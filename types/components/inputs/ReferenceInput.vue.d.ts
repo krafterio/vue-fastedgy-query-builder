@@ -77,8 +77,8 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
 }>> & Readonly<{
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
 }>, {
-    modelValue: any;
     kind: string;
+    modelValue: any;
     option: Record<string, any>;
     context: Record<string, any>;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;

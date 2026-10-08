@@ -1,5 +1,7 @@
 import { markRaw } from 'vue';
 
+import { defaultFilterInputs } from '../inputs.js';
+
 /**
  * @typedef {Object} FilterInputMatch
  * @property {Array<string>} [types] - Metadata types (`date`, `many2one`)
@@ -10,19 +12,29 @@ import { markRaw } from 'vue';
 
 const inputs = [];
 
+let defaults = null;
+
+// Read on first use: the inputs import the value sources, which import this
+// module, so the components are not defined yet while it loads.
+const packageInputs = () =>
+    (defaults ??= defaultFilterInputs.map(([match, component], order) => ({
+        match,
+        component: markRaw(/** @type {object} */ (component)),
+        order,
+    })));
+
 /**
  * Register the input of a value, for the rules it matches.
  *
  * For a rule, the entry kept is the one matching the most of what it declares;
- * on a tie, the last registered. The package registers its own inputs at import
- * and an application registers its own afterwards: it completes or replaces
- * any of them without touching the package.
+ * on a tie, the last registered. The package's own inputs come first, so an
+ * application's complete or replace any of them without touching the package.
  *
  * @param {FilterInputMatch} match
  * @param {unknown} component
  */
 export function registerFilterInput(match, component) {
-    inputs.push({ match, component: markRaw(/** @type {object} */ (component)), order: inputs.length });
+    inputs.push({ match, component: markRaw(/** @type {object} */ (component)), order: 1e3 + inputs.length });
 }
 
 const criteria = ['types', 'kinds', 'operators'];
@@ -64,6 +76,7 @@ function score(match, rule) {
  */
 export function resolveFilterInput(rule, local = []) {
     const entries = [
+        ...packageInputs(),
         ...inputs,
         ...local.map(([match, component], index) => ({ match, component, order: 1e6 + index })),
     ];

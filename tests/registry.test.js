@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import '../inputs.js';
 import { registerFilterInput, resolveFilterInput } from '../composables/registry.js';
+import ChoiceInput from '../components/inputs/ChoiceInput.vue';
 import DateInput from '../components/inputs/DateInput.vue';
 import ListInput from '../components/inputs/ListInput.vue';
 import NumberInput from '../components/inputs/NumberInput.vue';
@@ -14,6 +14,7 @@ const rule = (kind, operator, arity, type = kind) => ({ kind, operator, arity, t
 describe('the registry of inputs', () => {
     it('gives each rule the input matching the most of what an entry declares', () => {
         expect(resolveFilterInput(rule('text', 'icontains', 'one'))).toBe(TextInput);
+        expect(resolveFilterInput(rule('choice', '=', 'one'))).toBe(ChoiceInput);
         expect(resolveFilterInput(rule('text', 'in', 'list'))).toBe(ListInput);
         expect(resolveFilterInput(rule('number', 'between', 'two'))).toBe(RangeInput);
         expect(resolveFilterInput(rule('single', '=', 'one'))).toBe(RelationInput);

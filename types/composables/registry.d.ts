@@ -2,9 +2,8 @@
  * Register the input of a value, for the rules it matches.
  *
  * For a rule, the entry kept is the one matching the most of what it declares;
- * on a tie, the last registered. The package registers its own inputs at import
- * and an application registers its own afterwards: it completes or replaces
- * any of them without touching the package.
+ * on a tie, the last registered. The package's own inputs come first, so an
+ * application's complete or replace any of them without touching the package.
  *
  * @param {FilterInputMatch} match
  * @param {unknown} component

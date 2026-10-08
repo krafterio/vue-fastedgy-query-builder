@@ -55,8 +55,8 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
 }>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
     search: (...args: any[]) => void;
     "update:modelValue": (...args: any[]) => void;
-    more: (...args: any[]) => void;
     open: (...args: any[]) => void;
+    more: (...args: any[]) => void;
 }, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     modelValue: {
         type: null;
@@ -95,18 +95,18 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
 }>> & Readonly<{
     onSearch?: ((...args: any[]) => any) | undefined;
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
-    onMore?: ((...args: any[]) => any) | undefined;
     onOpen?: ((...args: any[]) => any) | undefined;
+    onMore?: ((...args: any[]) => any) | undefined;
 }>, {
     modelValue: any;
-    multiple: boolean;
     items: unknown[];
+    multiple: boolean;
     hasMore: boolean;
     loading: boolean;
     ariaLabel: string;
     delay: number;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
-declare const emit: (event: "search" | "update:modelValue" | "more" | "open", ...args: any[]) => void;
+declare const emit: (event: "search" | "update:modelValue" | "open" | "more", ...args: any[]) => void;
 import { ComboboxInput } from 'reka-ui';
 import { ComboboxTrigger } from 'reka-ui';
 import { ComboboxAnchor } from 'reka-ui';

@@ -35,7 +35,7 @@ declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPro
         default: string;
     };
 }>> & Readonly<{}>, {
-    kind: string;
     label: string;
+    kind: string;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=FilterButton.vue.d.ts.map

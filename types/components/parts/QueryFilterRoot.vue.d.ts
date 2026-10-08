@@ -202,8 +202,8 @@ declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPro
 }>, {
     deepFieldSearch: boolean;
     compactBelow: number;
-    list: Record<string, any>;
     exclude: unknown[];
+    list: Record<string, any>;
     prefix: string;
     scope: string;
     relationScopes: Record<string, any>;

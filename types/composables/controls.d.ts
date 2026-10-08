@@ -40,8 +40,8 @@ export const defaultQueryFilterControls: Readonly<{
             default: string;
         };
     }>> & Readonly<{}>, {
-        kind: string;
         label: string;
+        kind: string;
     }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>, {
         default?: (props: {}) => any;
     }>>;
@@ -105,8 +105,8 @@ export const defaultQueryFilterControls: Readonly<{
             default: () => never[];
         };
     }>> & Readonly<{}>, {
-        items: unknown[];
         label: string;
+        items: unknown[];
     }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>, {
         trigger?: (props: {}) => any;
     }>>;
