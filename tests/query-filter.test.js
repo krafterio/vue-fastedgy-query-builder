@@ -30,6 +30,12 @@ const buttonOf = (text) => [...body().querySelectorAll('button')].find((button) 
 const chips = () =>
     [...body().querySelectorAll('[data-slot="query-filter-chip"]')].map((chip) => chip.textContent.trim());
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const fieldLabels = () =>
+    [...body().querySelectorAll('[data-slot="query-filter-field-item"]')].map((item) => item.textContent.trim());
+const forwardOf = (label) =>
+    [...body().querySelectorAll('[data-slot="query-filter-field-entry"]')]
+        .find((entry) => entry.querySelector('[data-slot="query-filter-field-item"]').textContent.trim() === label)
+        .querySelector('[data-part="forward"]');
 
 const views = (items = []) => {
     const list = ref(items);
@@ -138,6 +144,40 @@ describe('the query filter of a list', () => {
         await settle();
 
         expect(chips()).toContain('Owner › Email');
+    });
+
+    it('never offers the way back through the relation just walked', async () => {
+        const wrapper = mount(QueryFilter, {
+            props: { model: 'household', list: fakeList(), views: false },
+            attachTo: body(),
+        });
+
+        await open(wrapper);
+        buttonOf('Add a filter').click();
+        await settle();
+
+        expect(fieldLabels()).toEqual(expect.arrayContaining(['Owner', 'Members']));
+
+        forwardOf('Owner').click();
+        await settle();
+        expect(fieldLabels()).toEqual(['Email', 'Name']);
+
+        body().querySelector('[data-part="back"]').click();
+        await settle();
+        forwardOf('Members').click();
+        await settle();
+        expect(fieldLabels()).toEqual(['Role', 'User']);
+    });
+
+    it('nor the way back through the relation of the block a condition sits in', async () => {
+        const list = fakeList(['workspace_users', 'any', null]);
+        const wrapper = mount(QueryFilter, { props: { model: 'household', list, views: false }, attachTo: body() });
+
+        await open(wrapper);
+        body().querySelector('[data-slot="query-filter-block"] [data-part="add-rule"]').click();
+        await settle();
+
+        expect(fieldLabels()).toEqual(['Role', 'User']);
     });
 
     it('turns a relation into a block « at least one that… », written on the related model', async () => {

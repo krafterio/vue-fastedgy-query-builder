@@ -88,8 +88,25 @@ const fold = (text) =>
 
 const fullPath = (names) => [props.path, ...names].filter(Boolean).join('.');
 
+/**
+ * The relation leading back through the last one walked, from the listed
+ * model and through the blocks around: the level it opens does not offer it.
+ */
+const backAt = (names) => {
+    let model = context.props.model;
+    let field = null;
+
+    for (const name of [...(props.path ? props.path.split('.') : []), ...names]) {
+        field = metadatas.value[model]?.fields?.[name] ?? null;
+        model = field?.target ?? null;
+    }
+
+    return field?.inverse ?? null;
+};
+
 const fieldsAt = (model, names) =>
     filterableFields(metadatas.value[model], { exclude: context.props.exclude, prefix: fullPath(names) })
+        .filter((field) => field.name !== backAt(names))
         .map((field) => ({
             path: [...names, field.name].join('.'),
             label: field.label,

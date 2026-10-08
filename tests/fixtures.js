@@ -7,6 +7,7 @@ const field = (name, type, extra = {}) => ({
     searchable: true,
     filter_operators: extra.operators ?? OPERATORS[type] ?? [],
     target: extra.target ?? null,
+    inverse: extra.inverse ?? null,
     choices: extra.choices ?? null,
     targets: extra.targets ?? null,
 });
@@ -50,8 +51,12 @@ export const METADATAS = {
             created_at: field('created_at', 'datetime', { label: 'Created at' }),
             plan: field('plan', 'choice', { choices: { free: 'Free', plus: 'Plus' } }),
             active: field('active', 'boolean'),
-            owner: field('owner', 'many2one', { target: 'user' }),
-            workspace_users: field('workspace_users', 'one2many', { target: 'household_user', label: 'Members' }),
+            owner: field('owner', 'many2one', { target: 'user', inverse: 'owned_households' }),
+            workspace_users: field('workspace_users', 'one2many', {
+                target: 'household_user',
+                label: 'Members',
+                inverse: 'workspace',
+            }),
         },
     },
     household_user: {
@@ -60,6 +65,7 @@ export const METADATAS = {
         fields: {
             role: field('role', 'choice', { choices: { admin: 'Admin', member: 'Member' } }),
             user: field('user', 'many2one', { target: 'user' }),
+            workspace: field('workspace', 'many2one', { target: 'household', inverse: 'workspace_users' }),
         },
     },
     user: {
@@ -69,6 +75,7 @@ export const METADATAS = {
             id: field('id', 'integer'),
             name: field('name', 'char'),
             email: field('email', 'email'),
+            owned_households: field('owned_households', 'one2many', { target: 'household', inverse: 'owner' }),
         },
     },
 };
