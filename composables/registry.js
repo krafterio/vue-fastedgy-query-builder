@@ -17,10 +17,9 @@ let defaults = null;
 // Read on first use: the inputs import the value sources, which import this
 // module, so the components are not defined yet while it loads.
 const packageInputs = () =>
-    (defaults ??= defaultFilterInputs.map(([match, component], order) => ({
+    (defaults ??= defaultFilterInputs.map(([match, component]) => ({
         match,
         component: markRaw(/** @type {object} */ (component)),
-        order,
     })));
 
 /**
@@ -34,7 +33,7 @@ const packageInputs = () =>
  * @param {unknown} component
  */
 export function registerFilterInput(match, component) {
-    inputs.push({ match, component: markRaw(/** @type {object} */ (component)), order: 1e3 + inputs.length });
+    inputs.push({ match, component: markRaw(/** @type {object} */ (component)) });
 }
 
 const criteria = ['types', 'kinds', 'operators'];
@@ -78,7 +77,7 @@ export function resolveFilterInput(rule, local = []) {
     const entries = [
         ...packageInputs(),
         ...inputs,
-        ...local.map(([match, component], index) => ({ match, component, order: 1e6 + index })),
+        ...local.map(([match, component]) => ({ match, component })),
     ];
     let best = null;
     let bestScore = -1;
@@ -86,7 +85,7 @@ export function resolveFilterInput(rule, local = []) {
     for (const entry of entries) {
         const value = score(entry.match, rule);
 
-        if (value > bestScore || (value === bestScore && value >= 0 && entry.order > best.order)) {
+        if (value >= 0 && value >= bestScore) {
             best = entry;
             bestScore = value;
         }
