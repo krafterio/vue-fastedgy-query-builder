@@ -51,6 +51,10 @@ watch(open, (isOpen) => {
 });
 
 watch(text, (value) => {
+    if (!open.value) {
+        return;
+    }
+
     clearTimeout(timer);
     timer = setTimeout(() => emit('search', value), props.delay);
 });
@@ -84,6 +88,15 @@ const remove = (value) =>
         (props.modelValue ?? []).filter((one) => one !== value)
     );
 const display = (value) => (value === null || value === undefined || Array.isArray(value) ? '' : props.labelOf(value));
+
+watch(
+    () => (props.multiple ? '' : display(props.modelValue)),
+    (label) => {
+        if (!open.value) {
+            text.value = label;
+        }
+    }
+);
 </script>
 
 <template>

@@ -85,6 +85,28 @@ describe('the inputs of the package', () => {
         expect(wrapper.emitted('update:modelValue')[0][0]).toEqual([1, 2, 3]);
     });
 
+    it('shows a chosen record by its name once read back, without searching for it', async () => {
+        fakes.reader.list.mockResolvedValue({ data: { items: [{ id: 9, name: 'Dupont' }], total: 1 } });
+
+        const wrapper = mount(RelationInput, {
+            props: {
+                modelValue: 9,
+                field: fields.owner,
+                kind: 'single',
+                operator: '=',
+                arity: 'one',
+                context: { metadatas: METADATAS },
+            },
+            attachTo: document.body,
+        });
+
+        await settle();
+        await new Promise((resolve) => setTimeout(resolve, 350));
+
+        expect(wrapper.find('input').element.value).toBe('Dupont');
+        expect(fakes.reader.list).toHaveBeenCalledTimes(1);
+    });
+
     it('says when a chosen record is gone, and reads the next page when the list end comes into sight', async () => {
         const wrapper = mount(RelationInput, {
             props: {
