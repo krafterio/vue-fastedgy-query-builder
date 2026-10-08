@@ -14,6 +14,7 @@ import { injectQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterControls } from '../../composables/controls.js';
 import { useQueryFilterIcons } from '../../composables/icons.js';
 import { say, sayCount } from '../../labels.js';
+import ScrollBox from '../internal/ScrollBox.vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -45,9 +46,11 @@ const results = computed(() =>
                 </DialogClose>
             </header>
 
-            <div data-slot="query-filter-body">
-                <slot />
-            </div>
+            <ScrollBox>
+                <div data-slot="query-filter-body">
+                    <slot />
+                </div>
+            </ScrollBox>
 
             <footer data-slot="query-filter-results">
                 <DialogClose as-child>
@@ -65,7 +68,11 @@ const results = computed(() =>
             :side-offset="6"
             :collision-padding="16"
         >
-            <slot />
+            <ScrollBox>
+                <div data-slot="query-filter-body">
+                    <slot />
+                </div>
+            </ScrollBox>
         </PopoverContent>
     </PopoverPortal>
 </template>

@@ -8,6 +8,7 @@ export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
     ComboboxEmpty: typeof ComboboxEmpty;
     ComboboxItem: typeof ComboboxItem;
     ComboboxViewport: typeof ComboboxViewport;
+    ScrollBox: typeof ScrollBox;
     ComboboxContent: typeof ComboboxContent;
     ComboboxPortal: typeof ComboboxPortal;
     ComboboxRoot: typeof ComboboxRoot;
@@ -52,8 +53,8 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
         default: number;
     };
 }>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
-    "update:modelValue": (...args: any[]) => void;
     search: (...args: any[]) => void;
+    "update:modelValue": (...args: any[]) => void;
     more: (...args: any[]) => void;
     open: (...args: any[]) => void;
 }, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
@@ -92,8 +93,8 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
         default: number;
     };
 }>> & Readonly<{
-    "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
     onSearch?: ((...args: any[]) => any) | undefined;
+    "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
     onMore?: ((...args: any[]) => any) | undefined;
     onOpen?: ((...args: any[]) => any) | undefined;
 }>, {
@@ -105,13 +106,14 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
     ariaLabel: string;
     delay: number;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
-declare const emit: (event: "update:modelValue" | "search" | "more" | "open", ...args: any[]) => void;
+declare const emit: (event: "search" | "update:modelValue" | "more" | "open", ...args: any[]) => void;
 import { ComboboxInput } from 'reka-ui';
 import { ComboboxTrigger } from 'reka-ui';
 import { ComboboxAnchor } from 'reka-ui';
 import { ComboboxEmpty } from 'reka-ui';
 import { ComboboxItem } from 'reka-ui';
 import { ComboboxViewport } from 'reka-ui';
+import ScrollBox from './ScrollBox.vue';
 import { ComboboxContent } from 'reka-ui';
 import { ComboboxPortal } from 'reka-ui';
 import { ComboboxRoot } from 'reka-ui';

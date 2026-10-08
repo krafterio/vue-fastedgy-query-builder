@@ -14,6 +14,7 @@ import { nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import { fetcherSrc } from 'vue-fastedgy';
 
 import { say } from '../../labels.js';
+import ScrollBox from './ScrollBox.vue';
 
 /**
  * One value, or several as tags, chosen in a list searched as it is typed in
@@ -121,26 +122,32 @@ const display = (value) => (value === null || value === undefined || Array.isArr
 
         <ComboboxPortal>
             <ComboboxContent data-slot="query-filter-options" position="popper" :side-offset="4">
-                <ComboboxViewport data-slot="query-filter-options-viewport">
-                    <ComboboxEmpty data-slot="query-filter-nothing">{{ say('Nothing to choose from.') }}</ComboboxEmpty>
-                    <ComboboxItem
-                        v-for="item in items"
-                        :key="item.value"
-                        :value="item.value"
-                        data-slot="query-filter-option"
-                    >
-                        <img
-                            v-if="item.image"
-                            v-fetcher-src.lazy
-                            :src="item.image"
-                            alt=""
-                            data-slot="query-filter-option-image"
-                        />
-                        <span data-slot="query-filter-option-label">{{ item.label }}</span>
-                        <small v-if="item.subtitle" data-slot="query-filter-option-subtitle">{{ item.subtitle }}</small>
-                    </ComboboxItem>
-                    <div ref="sentinel" data-slot="query-filter-sentinel" aria-hidden="true" />
-                </ComboboxViewport>
+                <ScrollBox>
+                    <ComboboxViewport data-slot="query-filter-options-viewport">
+                        <ComboboxEmpty data-slot="query-filter-nothing">{{
+                            say('Nothing to choose from.')
+                        }}</ComboboxEmpty>
+                        <ComboboxItem
+                            v-for="item in items"
+                            :key="item.value"
+                            :value="item.value"
+                            data-slot="query-filter-option"
+                        >
+                            <img
+                                v-if="item.image"
+                                v-fetcher-src.lazy
+                                :src="item.image"
+                                alt=""
+                                data-slot="query-filter-option-image"
+                            />
+                            <span data-slot="query-filter-option-label">{{ item.label }}</span>
+                            <small v-if="item.subtitle" data-slot="query-filter-option-subtitle">{{
+                                item.subtitle
+                            }}</small>
+                        </ComboboxItem>
+                        <div ref="sentinel" data-slot="query-filter-sentinel" aria-hidden="true" />
+                    </ComboboxViewport>
+                </ScrollBox>
             </ComboboxContent>
         </ComboboxPortal>
     </ComboboxRoot>

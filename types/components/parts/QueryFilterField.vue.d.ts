@@ -6,6 +6,7 @@ export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
     ListboxFilter: typeof ListboxFilter;
     ListboxItem: typeof ListboxItem;
     ListboxContent: typeof ListboxContent;
+    ScrollBox: typeof ScrollBox;
     ListboxRoot: typeof ListboxRoot;
 }>;
 export type __VLS_GlobalComponents = import("vue").GlobalComponents;
@@ -57,5 +58,6 @@ import { DialogClose } from 'reka-ui';
 import { ListboxFilter } from 'reka-ui';
 import { ListboxItem } from 'reka-ui';
 import { ListboxContent } from 'reka-ui';
+import ScrollBox from '../internal/ScrollBox.vue';
 import { ListboxRoot } from 'reka-ui';
 //# sourceMappingURL=QueryFilterField.vue.d.ts.map

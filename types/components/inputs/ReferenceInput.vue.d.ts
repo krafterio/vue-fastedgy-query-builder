@@ -6,6 +6,7 @@ export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
     SelectItemText: typeof SelectItemText;
     SelectItem: typeof SelectItem;
     SelectViewport: typeof SelectViewport;
+    ScrollBox: typeof ScrollBox;
     SelectContent: typeof SelectContent;
     SelectPortal: typeof SelectPortal;
     SelectRoot: typeof SelectRoot;
@@ -86,6 +87,7 @@ import { SelectTrigger } from 'reka-ui';
 import { SelectItemText } from 'reka-ui';
 import { SelectItem } from 'reka-ui';
 import { SelectViewport } from 'reka-ui';
+import ScrollBox from '../internal/ScrollBox.vue';
 import { SelectContent } from 'reka-ui';
 import { SelectPortal } from 'reka-ui';
 import { SelectRoot } from 'reka-ui';

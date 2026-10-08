@@ -152,14 +152,11 @@
 /* The panel */
 
 [data-slot='query-filter-content'] {
+    --fe-qb-scroll-height: min(36rem, calc(var(--reka-popover-content-available-height, 100vh) - 1rem));
     z-index: 50;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
     width: var(--fe-qb-width);
-    max-height: min(36rem, calc(100vh - 6rem));
-    padding: 0.75rem;
-    overflow-y: auto;
     border: 1px solid var(--fe-qb-border);
     border-radius: var(--fe-qb-radius);
     background: var(--fe-qb-surface);
@@ -168,14 +165,12 @@
 }
 
 [data-slot='query-filter-content'][data-compact] {
+    --fe-qb-scroll-height: none;
     position: fixed;
     inset: 0;
     width: auto;
-    max-height: none;
-    padding: 0;
     border: 0;
     border-radius: 0;
-    gap: 0;
 }
 
 [data-slot='query-filter-overlay'] {
@@ -217,11 +212,9 @@
 
 [data-slot='query-filter-body'] {
     display: flex;
-    flex: 1;
     flex-direction: column;
     gap: 0.75rem;
     padding: 0.75rem;
-    overflow-y: auto;
 }
 
 [data-slot='query-filter-results'] {
@@ -390,9 +383,7 @@
 [data-slot='query-filter-menu-content'] {
     z-index: 60;
     min-width: 12rem;
-    max-height: 20rem;
     padding: 0.25rem;
-    overflow-y: auto;
     border: 1px solid var(--fe-qb-border);
     border-radius: var(--fe-qb-radius);
     background: var(--fe-qb-surface);
@@ -401,19 +392,32 @@
     font-size: 0.875rem;
 }
 
+[data-slot='query-filter-operators'] {
+    --fe-qb-scroll-height: min(20rem, var(--reka-select-content-available-height, 20rem));
+}
+
+[data-slot='query-filter-options'] {
+    --fe-qb-scroll-height: min(20rem, var(--reka-combobox-content-available-height, 20rem));
+}
+
+[data-slot='query-filter-menu-content'] {
+    max-height: 20rem;
+    overflow-y: auto;
+}
+
 [data-slot='query-filter-picker'] {
+    --fe-qb-scroll-height: min(18rem, calc(var(--reka-popover-content-available-height, 100vh) - 6rem));
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
     width: 18rem;
-    max-height: 24rem;
 }
 
 [data-slot='query-filter-picker'][data-compact] {
+    --fe-qb-scroll-height: none;
     position: fixed;
     inset: 0;
     width: auto;
-    max-height: none;
     padding: 0;
     border: 0;
     border-radius: 0;
@@ -431,9 +435,41 @@
     padding: 0.75rem;
 }
 
-[data-slot='query-filter-field-list'] {
+/* What scrolls: the scroll area of reka, capped by --fe-qb-scroll-height or
+   filling the screen-wide panel it sits in */
+
+[data-slot='query-filter-scroll'] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+[data-compact] [data-slot='query-filter-scroll'] {
     flex: 1;
-    overflow-y: auto;
+}
+
+[data-slot='query-filter-scroll-viewport'] {
+    width: 100%;
+    height: 100%;
+    max-height: var(--fe-qb-scroll-height, none);
+    border-radius: inherit;
+}
+
+[data-slot='query-filter-scrollbar'] {
+    display: flex;
+    width: 0.625rem;
+    padding: 1px;
+    touch-action: none;
+    user-select: none;
+}
+
+[data-slot='query-filter-scroll-thumb'] {
+    position: relative;
+    flex: 1;
+    border-radius: 9999px;
+    background: var(--fe-qb-border);
 }
 
 [data-slot='query-filter-field-entry'] {

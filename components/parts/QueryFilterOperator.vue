@@ -15,6 +15,7 @@ import { convertValue, kindOf } from '../../catalog.js';
 import { injectQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterControls } from '../../composables/controls.js';
 import { say } from '../../labels.js';
+import ScrollBox from '../internal/ScrollBox.vue';
 
 /**
  * The operator of a condition, among those the catalog offers for its field.
@@ -61,16 +62,18 @@ const choose = (id) => {
 
         <SelectPortal>
             <SelectContent data-slot="query-filter-operators" position="popper" :side-offset="4">
-                <SelectViewport>
-                    <SelectItem
-                        v-for="one in options"
-                        :key="one.id"
-                        :value="one.id"
-                        data-slot="query-filter-operator-item"
-                    >
-                        <SelectItemText>{{ say(one.label) }}</SelectItemText>
-                    </SelectItem>
-                </SelectViewport>
+                <ScrollBox>
+                    <SelectViewport>
+                        <SelectItem
+                            v-for="one in options"
+                            :key="one.id"
+                            :value="one.id"
+                            data-slot="query-filter-operator-item"
+                        >
+                            <SelectItemText>{{ say(one.label) }}</SelectItemText>
+                        </SelectItem>
+                    </SelectViewport>
+                </ScrollBox>
             </SelectContent>
         </SelectPortal>
     </SelectRoot>

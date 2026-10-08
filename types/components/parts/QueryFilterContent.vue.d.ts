@@ -4,6 +4,7 @@ export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
     DialogOverlay: typeof DialogOverlay;
     DialogTitle: typeof DialogTitle;
     DialogClose: typeof DialogClose;
+    ScrollBox: typeof ScrollBox;
     DialogContent: typeof DialogContent;
     DialogPortal: typeof DialogPortal;
     PopoverContent: typeof PopoverContent;
@@ -12,9 +13,9 @@ export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
 export type __VLS_GlobalComponents = import("vue").GlobalComponents;
 export type __VLS_LocalDirectives = {};
 export type __VLS_Slots = {} & {
-    default?: (props: typeof __VLS_41) => any;
+    default?: (props: typeof __VLS_47) => any;
 } & {
-    default?: (props: typeof __VLS_67) => any;
+    default?: (props: typeof __VLS_79) => any;
 };
 export type __VLS_WithSlots<T, S> = T & {
     new (): {
@@ -25,11 +26,12 @@ declare const __VLS_export: __VLS_WithSlots<typeof __VLS_base, __VLS_Slots>;
 import { DialogOverlay } from 'reka-ui';
 import { DialogTitle } from 'reka-ui';
 import { DialogClose } from 'reka-ui';
+import ScrollBox from '../internal/ScrollBox.vue';
 import { DialogContent } from 'reka-ui';
 import { DialogPortal } from 'reka-ui';
 import { PopoverContent } from 'reka-ui';
 import { PopoverPortal } from 'reka-ui';
-declare var __VLS_41: {};
-declare var __VLS_67: {};
+declare var __VLS_47: {};
+declare var __VLS_79: {};
 declare const __VLS_base: import("vue").DefineComponent<{}, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=QueryFilterContent.vue.d.ts.map

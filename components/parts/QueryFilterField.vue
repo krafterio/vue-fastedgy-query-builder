@@ -24,6 +24,7 @@ import { injectQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterControls } from '../../composables/controls.js';
 import { useQueryFilterIcons } from '../../composables/icons.js';
 import { say } from '../../labels.js';
+import ScrollBox from '../internal/ScrollBox.vue';
 
 /**
  * The field of a condition, chosen in a list of the filterable fields that
@@ -206,32 +207,34 @@ const onSelect = (path) => {
                         :placeholder="say('Search a field')"
                         auto-focus
                     />
-                    <ListboxContent data-slot="query-filter-field-list">
-                        <div v-for="entry in entries" :key="entry.path" data-slot="query-filter-field-entry">
-                            <ListboxItem
-                                :value="entry.path"
-                                data-slot="query-filter-field-item"
-                                @keydown.right.prevent="entry.relation && enter(entry)"
-                            >
-                                {{ entry.label }}
-                            </ListboxItem>
-                            <component
-                                :is="controls.button"
-                                v-if="entry.relation"
-                                kind="ghost"
-                                data-part="forward"
-                                tabindex="-1"
-                                :aria-label="entry.label"
-                                @click="enter(entry)"
-                            >
-                                <component :is="icon('forward')" v-if="icon('forward')" aria-hidden="true" />
-                                <template v-else>›</template>
-                            </component>
-                        </div>
-                        <p v-if="entries.length === 0" data-slot="query-filter-nothing">
-                            {{ say('Nothing to choose from.') }}
-                        </p>
-                    </ListboxContent>
+                    <ScrollBox>
+                        <ListboxContent data-slot="query-filter-field-list">
+                            <div v-for="entry in entries" :key="entry.path" data-slot="query-filter-field-entry">
+                                <ListboxItem
+                                    :value="entry.path"
+                                    data-slot="query-filter-field-item"
+                                    @keydown.right.prevent="entry.relation && enter(entry)"
+                                >
+                                    {{ entry.label }}
+                                </ListboxItem>
+                                <component
+                                    :is="controls.button"
+                                    v-if="entry.relation"
+                                    kind="ghost"
+                                    data-part="forward"
+                                    tabindex="-1"
+                                    :aria-label="entry.label"
+                                    @click="enter(entry)"
+                                >
+                                    <component :is="icon('forward')" v-if="icon('forward')" aria-hidden="true" />
+                                    <template v-else>›</template>
+                                </component>
+                            </div>
+                            <p v-if="entries.length === 0" data-slot="query-filter-nothing">
+                                {{ say('Nothing to choose from.') }}
+                            </p>
+                        </ListboxContent>
+                    </ScrollBox>
                 </ListboxRoot>
             </component>
         </component>

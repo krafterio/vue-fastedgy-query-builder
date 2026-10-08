@@ -12,6 +12,7 @@ import { computed, ref, watch } from 'vue';
 
 import { useQueryFilterControls } from '../../composables/controls.js';
 import { say } from '../../labels.js';
+import ScrollBox from '../internal/ScrollBox.vue';
 import { inputProps } from './props.js';
 import RelationInput from './RelationInput.vue';
 
@@ -70,16 +71,18 @@ const switchModel = (next) => {
             </SelectTrigger>
             <SelectPortal>
                 <SelectContent data-slot="query-filter-operators" position="popper" :side-offset="4">
-                    <SelectViewport>
-                        <SelectItem
-                            v-for="one in field.targets ?? []"
-                            :key="one"
-                            :value="one"
-                            data-slot="query-filter-operator-item"
-                        >
-                            <SelectItemText>{{ metadatas[one]?.label ?? one }}</SelectItemText>
-                        </SelectItem>
-                    </SelectViewport>
+                    <ScrollBox>
+                        <SelectViewport>
+                            <SelectItem
+                                v-for="one in field.targets ?? []"
+                                :key="one"
+                                :value="one"
+                                data-slot="query-filter-operator-item"
+                            >
+                                <SelectItemText>{{ metadatas[one]?.label ?? one }}</SelectItemText>
+                            </SelectItem>
+                        </SelectViewport>
+                    </ScrollBox>
                 </SelectContent>
             </SelectPortal>
         </SelectRoot>
