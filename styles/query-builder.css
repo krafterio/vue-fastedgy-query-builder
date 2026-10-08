@@ -149,6 +149,12 @@
     font-variant-numeric: tabular-nums;
 }
 
+/* The quick filters of the list, laid out by whoever holds the trigger */
+
+[data-slot='query-filter-quick'] {
+    display: contents;
+}
+
 /* The panel */
 
 [data-slot='query-filter-content'] {

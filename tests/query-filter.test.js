@@ -1,7 +1,8 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils';
 import { ListboxRoot, SelectRoot } from 'reka-ui';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { computed, defineComponent, h, ref } from 'vue';
+import { computed, defineComponent, h, reactive, ref } from 'vue';
+import { defineQuickFilter } from 'vue-fastedgy';
 
 import '../inputs.js';
 import QueryBuilder from '../components/QueryBuilder.vue';
@@ -178,6 +179,38 @@ describe('the query filter of a list', () => {
         await settle();
 
         expect(fieldLabels()).toEqual(['Role', 'User']);
+    });
+
+    it('draws the quick filters of the list before its button, on the values the list applies', async () => {
+        const Toggle = defineComponent({
+            props: ['modelValue', 'label'],
+            emits: ['update:modelValue'],
+            setup:
+                (props, { emit }) =>
+                () =>
+                    h(
+                        'button',
+                        { 'data-test': 'closed', onClick: () => emit('update:modelValue', !props.modelValue) },
+                        `${props.label}: ${props.modelValue}`
+                    ),
+        });
+        const closed = defineQuickFilter({ name: 'closed', default: false, filter: () => null }, Toggle, {
+            label: 'Closed',
+        });
+        const list = { ...fakeList(), quick: reactive({ closed: true }), quickFilters: [closed] };
+        const wrapper = mount(QueryFilter, { props: { model: 'household', list, views: false }, attachTo: body() });
+
+        await settle();
+
+        const toggle = wrapper.find('[data-test="closed"]');
+        const trigger = wrapper.find('[data-part="trigger"]');
+
+        expect(toggle.text()).toBe('Closed: true');
+        expect(toggle.element.compareDocumentPosition(trigger.element) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
+        await toggle.trigger('click');
+
+        expect(list.quick.closed).toBe(false);
     });
 
     it('turns a relation into a block « at least one that… », written on the related model', async () => {

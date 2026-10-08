@@ -1,6 +1,7 @@
 declare const _default: typeof __VLS_export;
 export default _default;
 export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
+    QueryFilterQuickFilters: typeof QueryFilterQuickFilters;
     QueryFilterTrigger: typeof QueryFilterTrigger;
     QueryFilterViews: typeof QueryFilterViews;
     QueryFilterEmpty: typeof QueryFilterEmpty;
@@ -15,6 +16,7 @@ export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
 export type __VLS_GlobalComponents = import("vue").GlobalComponents;
 export type __VLS_LocalDirectives = {};
 declare const __VLS_export: import("vue").DefineComponent<{}, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+import QueryFilterQuickFilters from './parts/QueryFilterQuickFilters.vue';
 import QueryFilterTrigger from './parts/QueryFilterTrigger.vue';
 import QueryFilterViews from './parts/QueryFilterViews.vue';
 import QueryFilterEmpty from './parts/QueryFilterEmpty.vue';

@@ -5,14 +5,15 @@ import QueryFilterClear from './parts/QueryFilterClear.vue';
 import QueryFilterContent from './parts/QueryFilterContent.vue';
 import QueryFilterEmpty from './parts/QueryFilterEmpty.vue';
 import QueryFilterGroup from './parts/QueryFilterGroup.vue';
+import QueryFilterQuickFilters from './parts/QueryFilterQuickFilters.vue';
 import QueryFilterRoot from './parts/QueryFilterRoot.vue';
 import QueryFilterSave from './parts/QueryFilterSave.vue';
 import QueryFilterTrigger from './parts/QueryFilterTrigger.vue';
 import QueryFilterViews from './parts/QueryFilterViews.vue';
 
 /**
- * The default assembly of the parts: the button, then the panel with the views,
- * the conditions, the additions and the footer. Every prop and model of the
+ * The default assembly of the parts: the quick filters of the list, the button,
+ * then the panel with the views, the conditions, the additions and the footer. Every prop and model of the
  * root goes through; a project wanting another layout composes the parts.
  */
 defineOptions({ inheritAttrs: false });
@@ -20,6 +21,7 @@ defineOptions({ inheritAttrs: false });
 
 <template>
     <QueryFilterRoot v-bind="$attrs">
+        <QueryFilterQuickFilters />
         <QueryFilterTrigger />
         <QueryFilterContent>
             <QueryFilterViews />

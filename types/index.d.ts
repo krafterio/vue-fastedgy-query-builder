@@ -1,6 +1,7 @@
 export { default as QueryFilter } from "./components/QueryFilter.vue";
 export { default as QueryBuilder } from "./components/QueryBuilder.vue";
 export { default as QueryFilterRoot } from "./components/parts/QueryFilterRoot.vue";
+export { default as QueryFilterQuickFilters } from "./components/parts/QueryFilterQuickFilters.vue";
 export { default as QueryFilterTrigger } from "./components/parts/QueryFilterTrigger.vue";
 export { default as QueryFilterContent } from "./components/parts/QueryFilterContent.vue";
 export { default as QueryFilterCount } from "./components/parts/QueryFilterCount.vue";
