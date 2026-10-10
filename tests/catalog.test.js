@@ -38,6 +38,8 @@ describe('the catalog of operators', () => {
             'between'
         );
         expect(coversOneDay([dayStart(day), dayEnd(day)])).toBe(true);
+        expect(coversOneDay([dayStart(day), 'x'])).toBe(false);
+        expect(optionOfRule(options, { operator: 'between', value: [dayStart(day), 'x'] }).id).toBe('between');
         expect(dayOf(dayEnd(day))).toBe(day);
     });
 

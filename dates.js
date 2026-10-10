@@ -8,6 +8,12 @@
 
 const pad = (value) => String(value).padStart(2, '0');
 
+const isoOf = (value) => {
+    const date = new Date(value);
+
+    return Number.isNaN(date.getTime()) ? null : date.toISOString();
+};
+
 /**
  * @param {string} day - `YYYY-MM-DD`
  * @returns {Date|null}
@@ -73,9 +79,5 @@ export function coversOneDay(range) {
 
     const day = dayOf(range[0]);
 
-    return (
-        Boolean(day) &&
-        dayStart(day) === new Date(range[0]).toISOString() &&
-        dayEnd(day) === new Date(range[1]).toISOString()
-    );
+    return Boolean(day) && dayStart(day) === isoOf(range[0]) && dayEnd(day) === isoOf(range[1]);
 }
