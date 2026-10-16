@@ -1,4 +1,21 @@
-import { ArrowLeft, ChevronRight, Ellipsis, ListFilter, Lock, Plus, Search, Star, X } from '@lucide/vue';
+import {
+    ArrowDown,
+    ArrowLeft,
+    ArrowUp,
+    ArrowUpDown,
+    Check,
+    ChevronRight,
+    Ellipsis,
+    GripVertical,
+    Layers,
+    ListFilter,
+    Lock,
+    Plus,
+    RotateCcw,
+    Search,
+    Star,
+    X,
+} from '@lucide/vue';
 
 /**
  * The glyphs of the query filter in Lucide, for an application that draws with
@@ -15,4 +32,11 @@ export const queryFilterLucideIcons = Object.freeze({
     more: Ellipsis,
     search: Search,
     close: X,
+    sort: ArrowUpDown,
+    group: Layers,
+    drag: GripVertical,
+    ascending: ArrowUp,
+    descending: ArrowDown,
+    reset: RotateCcw,
+    check: Check,
 });

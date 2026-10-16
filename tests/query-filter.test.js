@@ -7,6 +7,8 @@ import { defineQuickFilter } from 'vue-fastedgy';
 import '../inputs.js';
 import QueryBuilder from '../components/QueryBuilder.vue';
 import QueryFilter from '../components/QueryFilter.vue';
+import QueryGroupBy from '../components/QueryGroupBy.vue';
+import QuerySort from '../components/QuerySort.vue';
 import { fakeList, settle } from './fixtures.js';
 
 const fakes = vi.hoisted(() => ({ views: null, reader: null }));
@@ -250,6 +252,62 @@ describe('the query filter of a list', () => {
         expect(list.expression.value).toEqual(['secret', 'like', '%x%']);
     });
 
+    it('says the joint above the conditions when asked, the rows then saying nothing before them', async () => {
+        const nested = [
+            '|',
+            [
+                ['active', 'is true'],
+                ['plan', '=', 'plus'],
+            ],
+        ];
+        const list = fakeList(['&', [['name', 'icontains', 'du'], nested]]);
+        const wrapper = mount(QueryFilter, {
+            props: { model: 'household', list, views: false, jointAbove: true },
+            attachTo: body(),
+        });
+
+        await open(wrapper);
+
+        const heading = body().querySelector('[data-slot="query-filter-heading"]');
+        const group = body().querySelector('[data-slot="query-filter-group"][data-nested]');
+
+        expect(heading.querySelector('[data-slot="query-filter-title"]').textContent).toBe('Filters');
+        expect(heading.querySelector('[data-slot="query-filter-matching"]').textContent).toBe('Households matching');
+        expect(heading.querySelector('[data-part="joint"]').textContent.trim()).toBe('all conditions');
+        expect(body().querySelector('[data-slot="query-filter-lead"]')).toBeNull();
+        expect(
+            group.querySelector('[data-slot="query-filter-group-header"] [data-part="joint"]').textContent.trim()
+        ).toBe('at least one condition');
+        expect(
+            group.querySelector('[data-slot="query-filter-group-header"] [data-part="remove-group"]')
+        ).not.toBeNull();
+
+        const root = wrapper.findAllComponents(SelectRoot).find((select) => select.props('modelValue') === '&');
+        root.vm.$emit('update:modelValue', '|');
+        await settle();
+
+        expect(list.expression.value).toEqual(['|', [['name', 'icontains', 'du'], nested]]);
+    });
+
+    it('says only its title over no condition, the joint coming with the first one', async () => {
+        const wrapper = mount(QueryFilter, {
+            props: { model: 'household', list: fakeList(), views: false, jointAbove: true },
+            attachTo: body(),
+        });
+
+        await open(wrapper);
+
+        const heading = () => body().querySelector('[data-slot="query-filter-heading"]');
+
+        expect(heading().textContent.trim()).toBe('Filters');
+        expect(heading().querySelector('[data-part="joint"]')).toBeNull();
+
+        buttonOf('Add a filter').click();
+        await settle();
+
+        expect(heading().querySelector('[data-part="joint"]').textContent.trim()).toBe('all conditions');
+    });
+
     it('lists the views, applies one, marks the favorite, and shows what the server refuses', async () => {
         fakes.views = views([
             { id: 1, name: 'Premium', user: null, is_default: true, editable: true, filters: ['plan', '=', 'plus'] },
@@ -304,6 +362,188 @@ describe('the query filter of a list', () => {
         expect(body().querySelector('[data-slot="query-filter-content"][data-compact]')).not.toBeNull();
         expect(buttonOf('See the 12 results')).toBeTruthy();
         expect(wrapper.find('[data-slot="query-filter-trigger-label"]').exists()).toBe(false);
+    });
+});
+
+describe('the conditions as chips', () => {
+    const applied = () =>
+        [...body().querySelectorAll('[data-slot="query-filter-applied"] [data-part="open"]')].map((one) =>
+            one.textContent.trim()
+        );
+
+    it('says each condition outside the panel, removes one by its cross, and opens the panel on a new one', async () => {
+        const list = fakeList([
+            '&',
+            [
+                ['name', 'icontains', 'du'],
+                ['plan', 'in', ['plus']],
+                ['owner', '=', 7],
+            ],
+        ]);
+        mount(QueryFilter, { props: { model: 'household', list, views: false, chips: true }, attachTo: body() });
+
+        await settle();
+
+        expect(applied()).toEqual(['Name contains du', 'Plan: Plus', 'Owner: Member']);
+
+        body().querySelector('[data-slot="query-filter-applied"] [data-part="remove"]').click();
+        await settle();
+
+        expect(list.expression.value).toEqual([
+            '&',
+            [
+                ['plan', 'in', ['plus']],
+                ['owner', '=', 7],
+            ],
+        ]);
+
+        body().querySelector('[data-slot="query-filter-chips"] [data-part="add-rule"]').click();
+        await settle();
+
+        expect(body().querySelector('[data-slot="query-filter-content"]')).not.toBeNull();
+        expect(body().querySelector('[data-slot="query-filter-picker"]')).not.toBeNull();
+    });
+});
+
+describe('the order of a list', () => {
+    it('says its first field, adds another from its list, turns one around on a click, and resets', async () => {
+        const list = { ...fakeList(), orderBy: ref(['name:asc']), defaultOrderBy: ['created_at:desc'] };
+        const wrapper = mount(QuerySort, { props: { list, model: 'household' }, attachTo: body() });
+        const summary = () => wrapper.find('[data-part="sort"]').attributes('aria-label');
+        const terms = () => [...body().querySelectorAll('[data-slot="query-sort-term"]')];
+        const offered = () =>
+            [...body().querySelectorAll('[data-slot="query-sort-offered"] [data-part="add"]')].map((one) =>
+                one.textContent.trim()
+            );
+
+        await settle();
+        expect(summary()).toBe('Sort: Name, A → Z');
+        expect(wrapper.find('[data-slot="query-sort-summary"]').text()).toBe('Name');
+        expect(wrapper.find('[data-slot="query-sort-arrow"]').text()).toBe('↑');
+
+        await wrapper.find('[data-part="sort"]').trigger('click');
+        await settle();
+
+        expect(offered()).toEqual(['Active', 'Created at', 'Plan', 'Slug']);
+
+        const search = body().querySelector('[data-slot="query-sort-content"] [data-part="search"]');
+        search.value = 'act';
+        search.dispatchEvent(new Event('input'));
+        await settle();
+        expect(offered()).toEqual(['Active']);
+
+        body().querySelector('[data-slot="query-sort-offered"] [data-part="add"]').click();
+        await settle();
+        expect(list.orderBy.value).toEqual(['name:asc', 'active:asc']);
+        expect(summary()).toBe('Sort: Name, A → Z +1');
+        expect(wrapper.find('[data-slot="query-sort-more"]').text()).toBe('+1');
+
+        terms()[1].querySelector('[data-part="direction"]').click();
+        await settle();
+        expect(list.orderBy.value).toEqual(['name:asc', 'active:desc']);
+        expect(terms()[1].querySelector('[data-slot="query-sort-direction"]').textContent).toBe('true first');
+
+        buttonOf('Reset').click();
+        await settle();
+        expect(list.orderBy.value).toEqual(['created_at:desc']);
+        expect(summary()).toBe('Sort: Created at, newest first');
+        expect(wrapper.find('[data-slot="query-sort-arrow"]').text()).toBe('↓');
+        expect(buttonOf('Reset')).toBeUndefined();
+    });
+
+    it('moves a field by its handle, with the arrow keys or dragged, and goes back to the default without any', async () => {
+        const list = { ...fakeList(), orderBy: ref(['name:asc', 'plan:desc', 'slug:asc']) };
+        mount(QuerySort, { props: { list, model: 'household' }, attachTo: body() });
+        const handles = () => [...body().querySelectorAll('[data-slot="query-sort-term"] [data-part="handle"]')];
+
+        await settle();
+        document.querySelector('[data-part="sort"]').click();
+        await settle();
+
+        handles()[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await settle();
+        expect(list.orderBy.value).toEqual(['plan:desc', 'name:asc', 'slug:asc']);
+
+        const transfer = { setData() {}, setDragImage() {}, effectAllowed: '' };
+        const dragStart = new Event('dragstart');
+        dragStart.dataTransfer = transfer;
+        handles()[2].dispatchEvent(dragStart);
+        body().querySelectorAll('[data-slot="query-sort-term"]')[0].dispatchEvent(new Event('drop'));
+        await settle();
+        expect(list.orderBy.value).toEqual(['slug:asc', 'plan:desc', 'name:asc']);
+
+        for (const remove of body().querySelectorAll('[data-slot="query-sort-term"] [data-part="remove"]')) {
+            remove.click();
+            await settle();
+        }
+
+        expect(list.orderBy.value).toBeNull();
+        expect(body().querySelector('[data-slot="query-sort-default"]')).not.toBeNull();
+    });
+
+    it('names a field the way the screen does', async () => {
+        const list = { ...fakeList(), orderBy: ref(['owner.name:desc']) };
+        const wrapper = mount(QuerySort, {
+            props: { list, model: 'household', fields: [{ path: 'owner.name', label: 'Owner' }] },
+            attachTo: body(),
+        });
+
+        await settle();
+
+        expect(wrapper.find('[data-part="sort"]').attributes('aria-label')).toBe('Sort: Owner, Z → A');
+        expect(wrapper.find('[data-slot="query-sort-summary"]').text()).toBe('Owner');
+    });
+});
+
+describe('the grouping of a list', () => {
+    it('groups by a field the list offers, searched by its name, then by none', async () => {
+        const list = {
+            groupBy: ref(null),
+            groupableFields: computed(() => [
+                { name: 'plan', label: 'Plan' },
+                { name: 'active', label: 'Active' },
+            ]),
+        };
+        const wrapper = mount(QueryGroupBy, { props: { list }, attachTo: body() });
+        const summary = () => wrapper.find('[data-slot="query-group-summary"]').text();
+        const items = () => [...body().querySelectorAll('[data-slot="query-group-item"]')];
+        const labels = () => items().map((item) => item.querySelector('[data-slot="query-group-label"]').textContent);
+        const pick = async (label) => {
+            await wrapper.find('[data-part="group-by"]').trigger('click');
+            await settle();
+            items()
+                .find((item) => item.textContent.includes(label))
+                .click();
+            await settle();
+        };
+
+        expect(summary()).toBe('None');
+
+        await wrapper.find('[data-part="group-by"]').trigger('click');
+        await settle();
+        expect(labels()).toEqual(['No group', 'Plan', 'Active']);
+
+        const search = body().querySelector('[data-slot="query-group-content"] [data-part="search"]');
+        search.value = 'pla';
+        search.dispatchEvent(new Event('input'));
+        await settle();
+        expect(labels()).toEqual(['Plan']);
+
+        items()[0].click();
+        await settle();
+        expect(list.groupBy.value).toBe('plan');
+        expect(summary()).toBe('Plan');
+        expect(wrapper.find('[data-part="group-by"]').attributes('data-active')).toBe('');
+
+        await pick('No group');
+        expect(list.groupBy.value).toBeNull();
+        expect(wrapper.find('[data-part="group-by"]').attributes('data-active')).toBeUndefined();
+    });
+
+    it('draws nothing for a list with no field to group by', () => {
+        const list = { groupBy: ref(null), groupableFields: computed(() => []) };
+
+        expect(mount(QueryGroupBy, { props: { list } }).find('[data-part="group-by"]').exists()).toBe(false);
     });
 });
 

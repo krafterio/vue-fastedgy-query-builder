@@ -1,6 +1,7 @@
 declare const _default: typeof __VLS_export;
 export default _default;
 export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
+    QueryFilterHeader: typeof QueryFilterHeader;
     QueryFilterEmpty: typeof QueryFilterEmpty;
     QueryFilterGroup: typeof QueryFilterGroup;
     QueryFilterAddRule: typeof QueryFilterAddRule;
@@ -10,6 +11,7 @@ export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
 export type __VLS_GlobalComponents = import("vue").GlobalComponents;
 export type __VLS_LocalDirectives = {};
 declare const __VLS_export: import("vue").DefineComponent<{}, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+import QueryFilterHeader from './parts/QueryFilterHeader.vue';
 import QueryFilterEmpty from './parts/QueryFilterEmpty.vue';
 import QueryFilterGroup from './parts/QueryFilterGroup.vue';
 import QueryFilterAddRule from './parts/QueryFilterAddRule.vue';

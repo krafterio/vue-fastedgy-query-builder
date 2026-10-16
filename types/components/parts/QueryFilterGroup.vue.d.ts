@@ -1,6 +1,7 @@
 declare const _default: typeof __VLS_export;
 export default _default;
 export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
+    QueryFilterJoint: typeof QueryFilterJoint;
     QueryFilterRule: typeof QueryFilterRule;
     QueryFilterAnyBlock: typeof QueryFilterAnyBlock;
     QueryFilterAddRule: typeof QueryFilterAddRule;
@@ -9,11 +10,11 @@ export type __VLS_LocalComponents = import("vue").ShallowUnwrapRef<{
 export type __VLS_GlobalComponents = import("vue").GlobalComponents;
 export type __VLS_LocalDirectives = {};
 export type __VLS_Slots = {} & {
-    rule?: (props: typeof __VLS_10) => any;
+    rule?: (props: typeof __VLS_28) => any;
 } & {
-    rule?: (props: typeof __VLS_24) => any;
+    rule?: (props: typeof __VLS_42) => any;
 } & {
-    rule?: (props: typeof __VLS_33) => any;
+    rule?: (props: typeof __VLS_51) => any;
 };
 export type __VLS_WithSlots<T, S> = T & {
     new (): {
@@ -21,16 +22,17 @@ export type __VLS_WithSlots<T, S> = T & {
     };
 };
 declare const __VLS_export: __VLS_WithSlots<typeof __VLS_base, __VLS_Slots>;
+import QueryFilterJoint from './QueryFilterJoint.vue';
 import QueryFilterRule from './QueryFilterRule.vue';
 import QueryFilterAnyBlock from './QueryFilterAnyBlock.vue';
 import QueryFilterAddRule from './QueryFilterAddRule.vue';
 import QueryFilterAddGroup from './QueryFilterAddGroup.vue';
-declare namespace __VLS_10 {
+declare namespace __VLS_28 {
     let rule: any;
     let model: string;
 }
-declare var __VLS_24: any;
-declare var __VLS_33: any;
+declare var __VLS_42: any;
+declare var __VLS_51: any;
 declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     /** The group node; the root of the tree when absent. */
     group: {

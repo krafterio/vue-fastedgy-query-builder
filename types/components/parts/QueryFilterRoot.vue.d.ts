@@ -104,6 +104,11 @@ declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPro
         type: NumberConstructor;
         default: undefined;
     };
+    /** Whether a group says its joint above its conditions, in a list, rather than on its second row. */
+    jointAbove: {
+        type: BooleanConstructor;
+        default: undefined;
+    };
     /** Whether the user may save a view for everyone. */
     canShare: {
         type: BooleanConstructor;
@@ -175,6 +180,11 @@ declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPro
         type: NumberConstructor;
         default: undefined;
     };
+    /** Whether a group says its joint above its conditions, in a list, rather than on its second row. */
+    jointAbove: {
+        type: BooleanConstructor;
+        default: undefined;
+    };
     /** Whether the user may save a view for everyone. */
     canShare: {
         type: BooleanConstructor;
@@ -202,6 +212,7 @@ declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPro
 }>, {
     deepFieldSearch: boolean;
     compactBelow: number;
+    jointAbove: boolean;
     exclude: unknown[];
     list: Record<string, any>;
     prefix: string;

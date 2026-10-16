@@ -44,6 +44,7 @@ export const METADATAS = {
     household: {
         name: 'household',
         label: 'Household',
+        label_plural: 'Households',
         fields: {
             id: field('id', 'integer'),
             name: field('name', 'char'),

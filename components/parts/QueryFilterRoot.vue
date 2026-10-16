@@ -29,6 +29,8 @@ const props = defineProps({
     inputs: { type: Array, default: () => [] },
     deepFieldSearch: { type: Boolean, default: undefined },
     compactBelow: { type: Number, default: undefined },
+    /** Whether a group says its joint above its conditions, in a list, rather than on its second row. */
+    jointAbove: { type: Boolean, default: undefined },
     /** Whether the user may save a view for everyone. */
     canShare: { type: Boolean, default: true },
     /** Whether the list keeps custom views. */
@@ -44,6 +46,7 @@ const options = useQueryFilterOptions();
 const settings = computed(() => ({
     deepFieldSearch: props.deepFieldSearch ?? options.deepFieldSearch,
     compactBelow: props.compactBelow ?? options.compactBelow,
+    jointAbove: props.jointAbove ?? options.jointAbove,
 }));
 const compact = useCompact(() => settings.value.compactBelow);
 

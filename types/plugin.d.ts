@@ -4,6 +4,7 @@
  * @param {{
  *   deepFieldSearch?: boolean,
  *   compactBelow?: number,
+ *   jointAbove?: boolean,
  *   controls?: Record<string, unknown>,
  *   icons?: Record<string, unknown>,
  *   inputs?: Array<[import('./composables/registry.js').FilterInputMatch, unknown]>,
@@ -17,6 +18,7 @@
 export function createQueryFilter(options?: {
     deepFieldSearch?: boolean;
     compactBelow?: number;
+    jointAbove?: boolean;
     controls?: Record<string, unknown>;
     icons?: Record<string, unknown>;
     inputs?: Array<[import("./composables/registry.js").FilterInputMatch, unknown]>;

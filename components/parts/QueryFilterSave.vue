@@ -4,6 +4,7 @@ import { formatValidationErrors } from 'vue-fastedgy';
 
 import { injectQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterControls } from '../../composables/controls.js';
+import { useQueryFilterIcons } from '../../composables/icons.js';
 import { say } from '../../labels.js';
 
 /**
@@ -13,6 +14,7 @@ import { say } from '../../labels.js';
  */
 const context = injectQueryFilterContext();
 const controls = useQueryFilterControls();
+const { icon } = useQueryFilterIcons();
 const views = context.views;
 
 const saving = ref(false);
@@ -83,6 +85,7 @@ const update = () => attempt(() => views.save(views.current.value));
                 {{ say('Update the view') }}
             </component>
             <component :is="controls.button" kind="ghost" data-part="save" :disabled="count === 0" @click="start">
+                <component :is="icon('save')" v-if="icon('save')" aria-hidden="true" />
                 {{ say('Save as view') }}
             </component>
         </template>

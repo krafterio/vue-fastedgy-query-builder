@@ -4,6 +4,7 @@ import { inject } from 'vue';
 export const queryFilterDefaults = Object.freeze({
     deepFieldSearch: false,
     compactBelow: 640,
+    jointAbove: false,
     controls: {},
     icons: {},
 });

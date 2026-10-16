@@ -8,6 +8,7 @@ export function useQueryFilterOptions(): typeof queryFilterDefaults;
 export const queryFilterDefaults: Readonly<{
     deepFieldSearch: false;
     compactBelow: 640;
+    jointAbove: false;
     controls: {};
     icons: {};
 }>;

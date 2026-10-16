@@ -3,6 +3,7 @@ import QueryFilterAddGroup from './parts/QueryFilterAddGroup.vue';
 import QueryFilterAddRule from './parts/QueryFilterAddRule.vue';
 import QueryFilterEmpty from './parts/QueryFilterEmpty.vue';
 import QueryFilterGroup from './parts/QueryFilterGroup.vue';
+import QueryFilterHeader from './parts/QueryFilterHeader.vue';
 import QueryFilterRoot from './parts/QueryFilterRoot.vue';
 
 /**
@@ -15,6 +16,7 @@ defineOptions({ inheritAttrs: false });
 <template>
     <QueryFilterRoot v-bind="$attrs" inline :views="false">
         <div data-slot="query-builder">
+            <QueryFilterHeader />
             <QueryFilterEmpty />
             <QueryFilterGroup />
             <div data-slot="query-filter-adds">

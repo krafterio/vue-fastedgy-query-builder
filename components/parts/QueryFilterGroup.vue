@@ -8,12 +8,17 @@ import { say } from '../../labels.js';
 import QueryFilterAddGroup from './QueryFilterAddGroup.vue';
 import QueryFilterAddRule from './QueryFilterAddRule.vue';
 import QueryFilterAnyBlock from './QueryFilterAnyBlock.vue';
+import QueryFilterJoint from './QueryFilterJoint.vue';
 import QueryFilterRule from './QueryFilterRule.vue';
 
 /**
  * A group and its rows, sub-groups and blocks drawn inside it: the first row
  * says « Where », the second carries the joint of the whole group, the others
  * repeat it. A nested group carries its own additions and can go.
+ *
+ * With `jointAbove`, the rows say nothing before them: the joint is chosen
+ * above them, by the header for the root, on a line of its own for a nested
+ * group, which its removal joins.
  */
 const props = defineProps({
     /** The group node; the root of the tree when absent. */
@@ -35,6 +40,7 @@ const { icon } = useQueryFilterIcons();
 const node = computed(() => props.group ?? context.query.tree.value);
 const model = computed(() => props.model ?? context.props.model);
 const joint = computed(() => (node.value.joint === '|' ? say('Or') : say('And')));
+const above = computed(() => context.settings.value.jointAbove);
 
 const toggleJoint = () => context.query.setJoint(node.value.id, node.value.joint === '|' ? '&' : '|');
 </script>
@@ -47,8 +53,23 @@ const toggleJoint = () => context.query.setJoint(node.value.id, node.value.joint
         :data-joint="node.joint === '|' ? 'or' : 'and'"
         :data-nested="nested ? '' : undefined"
     >
+        <div v-if="nested && above" data-slot="query-filter-group-header">
+            <QueryFilterJoint :group="node" />
+            <component
+                :is="controls.button"
+                v-if="removable"
+                kind="ghost"
+                data-part="remove-group"
+                :aria-label="say('Remove the group')"
+                @click="context.query.remove(node.id)"
+            >
+                <component :is="icon('remove')" v-if="icon('remove')" aria-hidden="true" />
+                <template v-else>{{ say('Remove the group') }}</template>
+            </component>
+        </div>
+
         <div v-for="(child, index) in node.children" :key="child.id" data-slot="query-filter-row" role="listitem">
-            <span data-slot="query-filter-lead">
+            <span v-if="!above" data-slot="query-filter-lead">
                 <template v-if="index === 0">{{ say('Where') }}</template>
                 <component
                     :is="controls.chip"
@@ -91,7 +112,7 @@ const toggleJoint = () => context.query.setJoint(node.value.id, node.value.joint
             <QueryFilterAddGroup :group="node.id" />
             <component
                 :is="controls.button"
-                v-if="removable"
+                v-if="removable && !above"
                 kind="ghost"
                 data-part="remove-group"
                 :aria-label="say('Remove the group')"

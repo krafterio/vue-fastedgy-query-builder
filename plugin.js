@@ -7,6 +7,7 @@ import { QUERY_FILTER_OPTIONS, queryFilterDefaults } from './composables/options
  * @param {{
  *   deepFieldSearch?: boolean,
  *   compactBelow?: number,
+ *   jointAbove?: boolean,
  *   controls?: Record<string, unknown>,
  *   icons?: Record<string, unknown>,
  *   inputs?: Array<[import('./composables/registry.js').FilterInputMatch, unknown]>,

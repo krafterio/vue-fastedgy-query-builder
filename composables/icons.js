@@ -13,6 +13,13 @@ export const queryFilterIconNames = Object.freeze([
     'private',
     'more',
     'check',
+    'save',
+    'sort',
+    'group',
+    'drag',
+    'ascending',
+    'descending',
+    'reset',
     'search',
     'close',
 ]);

@@ -1,12 +1,17 @@
 export { default as QueryFilter } from "./components/QueryFilter.vue";
 export { default as QueryBuilder } from "./components/QueryBuilder.vue";
+export { default as QuerySort } from "./components/QuerySort.vue";
+export { default as QueryGroupBy } from "./components/QueryGroupBy.vue";
 export { default as QueryFilterRoot } from "./components/parts/QueryFilterRoot.vue";
 export { default as QueryFilterQuickFilters } from "./components/parts/QueryFilterQuickFilters.vue";
 export { default as QueryFilterTrigger } from "./components/parts/QueryFilterTrigger.vue";
 export { default as QueryFilterContent } from "./components/parts/QueryFilterContent.vue";
 export { default as QueryFilterCount } from "./components/parts/QueryFilterCount.vue";
+export { default as QueryFilterChips } from "./components/parts/QueryFilterChips.vue";
 export { default as QueryFilterViews } from "./components/parts/QueryFilterViews.vue";
 export { default as QueryFilterViewItem } from "./components/parts/QueryFilterViewItem.vue";
+export { default as QueryFilterHeader } from "./components/parts/QueryFilterHeader.vue";
+export { default as QueryFilterJoint } from "./components/parts/QueryFilterJoint.vue";
 export { default as QueryFilterGroup } from "./components/parts/QueryFilterGroup.vue";
 export { default as QueryFilterRule } from "./components/parts/QueryFilterRule.vue";
 export { default as QueryFilterAnyBlock } from "./components/parts/QueryFilterAnyBlock.vue";
