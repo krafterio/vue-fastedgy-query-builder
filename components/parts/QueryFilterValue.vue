@@ -25,7 +25,13 @@ const fullPath = computed(() => [props.path, props.resolved.path].filter(Boolean
 
 const input = computed(() =>
     resolveFilterInput(
-        { type: props.resolved.field.type, kind: kind.value, operator: props.rule.operator, arity: arity.value },
+        {
+            type: props.resolved.field.type,
+            kind: kind.value,
+            operator: props.rule.operator,
+            option: props.option?.id,
+            arity: arity.value,
+        },
         context.props.inputs
     )
 );

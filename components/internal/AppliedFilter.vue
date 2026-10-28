@@ -2,7 +2,7 @@
 import { computed, reactive, watch } from 'vue';
 import { arityOf, countConditions, resolveFieldPath } from 'vue-fastedgy';
 
-import { datetimeDays, kindOf, operatorOptions, optionOfRule } from '../../catalog.js';
+import { datetimeDays, isRelative, kindOf, operatorOptions, optionOfRule, relativeDays } from '../../catalog.js';
 import { injectQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterIcons } from '../../composables/icons.js';
 import { resolveValueSource } from '../../composables/value-source.js';
@@ -84,6 +84,12 @@ const ruleLabel = () => {
 
     if (arityOf(props.node.operator) === 'none') {
         return `${field} ${say(option.label)}`;
+    }
+
+    if (isRelative(option)) {
+        const unit = say(option.id === 'more than' ? 'days ago' : 'days');
+
+        return `${field} ${say(option.label)} ${relativeDays(props.node.value) ?? '…'} ${unit}`;
     }
 
     const days = kind.value === 'datetime' ? datetimeDays(option, props.node.value).map(dayText) : null;

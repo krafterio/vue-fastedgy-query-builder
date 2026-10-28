@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import ComboPicker from '../components/internal/ComboPicker.vue';
 import DateTimeInput from '../components/inputs/DateTimeInput.vue';
+import DaysInput from '../components/inputs/DaysInput.vue';
 import ListInput from '../components/inputs/ListInput.vue';
 import RangeInput from '../components/inputs/RangeInput.vue';
 import RelationInput from '../components/inputs/RelationInput.vue';
@@ -27,6 +28,40 @@ beforeEach(() => {
 });
 
 describe('the inputs of the package', () => {
+    it('writes a number of days as the expression of the day that many days back', async () => {
+        const wrapper = mount(DaysInput, {
+            props: {
+                field: fields.created_at,
+                kind: 'datetime',
+                operator: '>=',
+                arity: 'one',
+                option: { id: 'in the last', operator: '>=' },
+            },
+        });
+        const input = wrapper.find('input');
+
+        await input.setValue('30');
+        await input.trigger('blur');
+
+        expect(wrapper.emitted('update:modelValue').at(-1)[0]).toBe('`today(-30)`');
+    });
+
+    it('shows the days of a stored expression', () => {
+        const wrapper = mount(DaysInput, {
+            props: {
+                modelValue: '`today(-90)`',
+                field: fields.created_at,
+                kind: 'datetime',
+                operator: '<',
+                arity: 'one',
+                option: { id: 'more than', operator: '<' },
+            },
+        });
+
+        expect(wrapper.find('input').element.value).toBe('90');
+        expect(wrapper.find('[data-part="unit"]').text()).toBe('days ago');
+    });
+
     it('writes a datetime picked on a day as the whole of that local day', async () => {
         const wrapper = mount(DateTimeInput, {
             props: {

@@ -11,7 +11,7 @@ import {
 import { computed } from 'vue';
 import { createAnyBlock } from 'vue-fastedgy';
 
-import { convertValue, kindOf } from '../../catalog.js';
+import { convertValue, kindOf, uiOf } from '../../catalog.js';
 import { injectQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterControls } from '../../composables/controls.js';
 import { say } from '../../labels.js';
@@ -48,7 +48,7 @@ const choose = (id) => {
 
     const value = props.option ? convertValue(kind.value, props.option, next, props.rule.value) : undefined;
 
-    context.query.update(props.rule.id, { operator: next.operator, value, ui: next.id === 'on' ? 'on' : undefined });
+    context.query.update(props.rule.id, { operator: next.operator, value, ui: uiOf(next) });
 };
 </script>
 

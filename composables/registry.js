@@ -7,6 +7,7 @@ import { defaultFilterInputs } from '../inputs.js';
  * @property {Array<string>} [types] - Metadata types (`date`, `many2one`)
  * @property {Array<string>} [kinds] - Kinds of the catalog (`number`, `single`)
  * @property {Array<string>} [operators] - Operators (`between`, `in`)
+ * @property {Array<string>} [options] - Options of the operator menu (`on`, `in the last`)
  * @property {string} [arity] - `one`, `two`, `list`
  */
 
@@ -36,7 +37,9 @@ export function registerFilterInput(match, component) {
     inputs.push({ match, component: markRaw(/** @type {object} */ (component)) });
 }
 
-const criteria = ['types', 'kinds', 'operators'];
+const criteria = ['types', 'kinds', 'operators', 'options'];
+
+const RULE_KEYS = { types: 'type', kinds: 'kind', operators: 'operator', options: 'option' };
 
 function score(match, rule) {
     let count = 0;
@@ -46,7 +49,7 @@ function score(match, rule) {
             continue;
         }
 
-        const value = key === 'types' ? rule.type : key === 'kinds' ? rule.kind : rule.operator;
+        const value = rule[RULE_KEYS[key]];
 
         if (!match[key].includes(value)) {
             return -1;
@@ -69,16 +72,12 @@ function score(match, rule) {
 /**
  * The input of a rule, from the registry and from what a list adds for itself.
  *
- * @param {{ type?: string, kind?: string|null, operator: string, arity: string }} rule
+ * @param {{ type?: string, kind?: string|null, operator: string, option?: string, arity: string }} rule
  * @param {Array<[FilterInputMatch, unknown]>} [local] - Entries of one list, winning over the registry
  * @returns {unknown}
  */
 export function resolveFilterInput(rule, local = []) {
-    const entries = [
-        ...packageInputs(),
-        ...inputs,
-        ...local.map(([match, component]) => ({ match, component })),
-    ];
+    const entries = [...packageInputs(), ...inputs, ...local.map(([match, component]) => ({ match, component }))];
     let best = null;
     let bestScore = -1;
 

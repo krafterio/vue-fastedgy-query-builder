@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { registerFilterInput, resolveFilterInput } from '../composables/registry.js';
 import ChoiceInput from '../components/inputs/ChoiceInput.vue';
 import DateInput from '../components/inputs/DateInput.vue';
+import DaysInput from '../components/inputs/DaysInput.vue';
 import ListInput from '../components/inputs/ListInput.vue';
 import NumberInput from '../components/inputs/NumberInput.vue';
 import RangeInput from '../components/inputs/RangeInput.vue';
@@ -23,6 +24,13 @@ describe('the registry of inputs', () => {
         expect(resolveFilterInput(rule('single', 'between', 'two'))).toBe(RangeInput);
         expect(resolveFilterInput(rule('date', '=', 'one'))).toBe(DateInput);
         expect(resolveFilterInput(rule('date', 'between', 'two'))).toBe(RangeInput);
+        expect(resolveFilterInput(rule('json', 'contains', 'one'))).toBe(TextInput);
+    });
+
+    it('gives the days counted back from today their own input, by the option of the menu', () => {
+        expect(resolveFilterInput({ ...rule('datetime', '>=', 'one'), option: 'in the last' })).toBe(DaysInput);
+        expect(resolveFilterInput({ ...rule('date', '<', 'one'), option: 'more than' })).toBe(DaysInput);
+        expect(resolveFilterInput({ ...rule('date', '>=', 'one'), option: '>=' })).toBe(DateInput);
     });
 
     it('lets one list replace an input for itself alone, and an application for all', () => {

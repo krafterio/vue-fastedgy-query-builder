@@ -96,6 +96,10 @@ export const it: {
     until: string;
     after: string;
     from: string;
+    'in the last': string;
+    days: string;
+    'more than': string;
+    'days ago': string;
     'earlier than': string;
     'at the latest': string;
     'later than': string;

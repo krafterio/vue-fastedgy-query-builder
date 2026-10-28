@@ -12,7 +12,7 @@ export function registerFilterInput(match: FilterInputMatch, component: unknown)
 /**
  * The input of a rule, from the registry and from what a list adds for itself.
  *
- * @param {{ type?: string, kind?: string|null, operator: string, arity: string }} rule
+ * @param {{ type?: string, kind?: string|null, operator: string, option?: string, arity: string }} rule
  * @param {Array<[FilterInputMatch, unknown]>} [local] - Entries of one list, winning over the registry
  * @returns {unknown}
  */
@@ -20,6 +20,7 @@ export function resolveFilterInput(rule: {
     type?: string;
     kind?: string | null;
     operator: string;
+    option?: string;
     arity: string;
 }, local?: Array<[FilterInputMatch, unknown]>): unknown;
 /**
@@ -79,6 +80,10 @@ export type FilterInputMatch = {
      * - Operators (`between`, `in`)
      */
     operators?: string[] | undefined;
+    /**
+     * - Options of the operator menu (`on`, `in the last`)
+     */
+    options?: string[] | undefined;
     /**
      * - `one`, `two`, `list`
      */

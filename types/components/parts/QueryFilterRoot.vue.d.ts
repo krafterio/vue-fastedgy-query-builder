@@ -213,8 +213,8 @@ declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPro
     deepFieldSearch: boolean;
     compactBelow: number;
     jointAbove: boolean;
-    exclude: unknown[];
     list: Record<string, any>;
+    exclude: unknown[];
     prefix: string;
     scope: string;
     relationScopes: Record<string, any>;

@@ -28,7 +28,7 @@ const KINDS = {
     many2many: 'multiple',
     reference: 'reference',
     many2one_ref: 'reference',
-    json: 'content',
+    json: 'json',
     binary: 'content',
 };
 
@@ -62,6 +62,13 @@ const EMPTY = [
     ['is empty', 'is empty', 'is empty'],
     ['is not empty', 'is not empty', 'is not empty'],
 ];
+
+const RELATIVE = [
+    ['in the last', '>=', 'in the last'],
+    ['more than', '<', 'more than'],
+];
+
+const RELATIVE_DAY = /^`today\((-?\d+)\)`$/;
 
 /**
  * The operators offered by kind, in the order offered: what the menu shows,
@@ -100,6 +107,7 @@ const OFFERS = {
         ['>', '>', 'after'],
         ['>=', '>=', 'from'],
         ['between', 'between', 'between'],
+        ...RELATIVE,
         ...EMPTY,
     ],
     datetime: [
@@ -109,6 +117,7 @@ const OFFERS = {
         ['>', '>', 'after'],
         ['>=', '>=', 'from'],
         ['between', 'between', 'between'],
+        ...RELATIVE,
         ...EMPTY,
     ],
     time: [
@@ -159,12 +168,14 @@ const OFFERS = {
         ['not in', 'not in', 'is none of'],
         ...EMPTY,
     ],
+    json: [['contains', 'contains', 'contains'], ['not contains', 'not contains', 'does not contain'], ...EMPTY],
     content: EMPTY,
 };
 
 /**
  * @typedef {Object} OperatorOption
- * @property {string} id - What the menu selects: the operator, or `on` for a datetime on a day
+ * @property {string} id - What the menu selects: the operator, `on` for a datetime on a day, `in the last` or
+ *     `more than` for a number of days before today
  * @property {string} operator - What the expression carries
  * @property {string} label - The English text, translated where it is shown
  */
@@ -193,6 +204,20 @@ export function operatorOptions(metadatas, field) {
  * @returns {OperatorOption|null}
  */
 export function optionOfRule(options, rule) {
+    const chosen = rule.ui ? options.find((option) => option.id === rule.ui) : null;
+
+    if (chosen) {
+        return chosen;
+    }
+
+    if (rule.ui === undefined && RELATIVE_DAY.test(String(rule.value ?? ''))) {
+        const relative = options.find((option) => isRelative(option) && option.operator === rule.operator);
+
+        if (relative) {
+            return relative;
+        }
+    }
+
     const on = options.find((option) => option.id === 'on');
 
     if (
@@ -203,7 +228,51 @@ export function optionOfRule(options, rule) {
         return on;
     }
 
-    return options.find((option) => option.id !== 'on' && option.operator === rule.operator) ?? null;
+    return options.find((option) => option.id === option.operator && option.operator === rule.operator) ?? null;
+}
+
+/**
+ * Whether an option counts days back from today rather than naming a day.
+ *
+ * @param {OperatorOption|null|undefined} option
+ * @returns {boolean}
+ */
+export function isRelative(option) {
+    return RELATIVE.some(([id]) => id === option?.id);
+}
+
+/**
+ * The days a relative value counts back, `` `today(-30)` `` reading 30.
+ *
+ * @param {any} value
+ * @returns {number|null}
+ */
+export function relativeDays(value) {
+    const match = RELATIVE_DAY.exec(String(value ?? ''));
+
+    return match ? -Number(match[1]) : null;
+}
+
+/**
+ * The expression of a number of days back from today, evaluated by the server
+ * each time the filter is read.
+ *
+ * @param {number|null|undefined} days
+ * @returns {string|undefined}
+ */
+export function relativeValue(days) {
+    return Number.isInteger(days) && days > 0 ? `\`today(-${days})\`` : undefined;
+}
+
+/**
+ * What the menu remembers of an option on the rule, when its operator alone
+ * would read as another one.
+ *
+ * @param {OperatorOption} option
+ * @returns {string|undefined}
+ */
+export function uiOf(option) {
+    return option.id === option.operator ? undefined : option.id;
 }
 
 const isBlank = (value) => value === undefined || value === null || value === '';
@@ -271,6 +340,10 @@ export function datetimeDays(option, value) {
  * @returns {any}
  */
 export function convertValue(kind, from, to, value) {
+    if (isRelative(from) || isRelative(to)) {
+        return isRelative(from) && isRelative(to) ? value : undefined;
+    }
+
     if (kind === 'datetime') {
         return encodeDays(to, daysOf(from, value));
     }
@@ -317,6 +390,6 @@ export function keepOnFieldChange(metadatas, before, after, rule) {
     return {
         operator: option.operator,
         value: sameKind ? rule.value : undefined,
-        ui: option.id === 'on' ? 'on' : undefined,
+        ui: uiOf(option),
     };
 }

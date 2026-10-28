@@ -1,6 +1,7 @@
 import ChoiceInput from './components/inputs/ChoiceInput.vue';
 import DateInput from './components/inputs/DateInput.vue';
 import DateTimeInput from './components/inputs/DateTimeInput.vue';
+import DaysInput from './components/inputs/DaysInput.vue';
 import ListInput from './components/inputs/ListInput.vue';
 import NumberInput from './components/inputs/NumberInput.vue';
 import RangeInput from './components/inputs/RangeInput.vue';
@@ -14,7 +15,7 @@ import TimeInput from './components/inputs/TimeInput.vue';
  * registers, which replace them for the rules they match.
  */
 export const defaultFilterInputs = [
-    [{ kinds: ['text'] }, TextInput],
+    [{ kinds: ['text', 'json'] }, TextInput],
     [{ kinds: ['number'] }, NumberInput],
     [{ kinds: ['date'] }, DateInput],
     [{ kinds: ['time'] }, TimeInput],
@@ -30,12 +31,14 @@ export const defaultFilterInputs = [
     [{ kinds: ['reference'], arity: 'list' }, ReferenceInput],
     [{ kinds: ['single'], operators: ['<', '<=', '>', '>='] }, NumberInput],
     [{ kinds: ['single'], operators: ['between'] }, RangeInput],
+    [{ kinds: ['date', 'datetime'], options: ['in the last', 'more than'] }, DaysInput],
 ];
 
 export {
     ChoiceInput,
     DateInput,
     DateTimeInput,
+    DaysInput,
     ListInput,
     NumberInput,
     RangeInput,

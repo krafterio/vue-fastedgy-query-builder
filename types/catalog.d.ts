@@ -9,7 +9,8 @@
 export function kindOf(field: import("vue-fastedgy").MetadataField | null | undefined): string | null;
 /**
  * @typedef {Object} OperatorOption
- * @property {string} id - What the menu selects: the operator, or `on` for a datetime on a day
+ * @property {string} id - What the menu selects: the operator, `on` for a datetime on a day, `in the last` or
+ *     `more than` for a number of days before today
  * @property {string} operator - What the expression carries
  * @property {string} label - The English text, translated where it is shown
  */
@@ -34,6 +35,36 @@ export function optionOfRule(options: Array<OperatorOption>, rule: {
     value?: any;
     ui?: string;
 }): OperatorOption | null;
+/**
+ * Whether an option counts days back from today rather than naming a day.
+ *
+ * @param {OperatorOption|null|undefined} option
+ * @returns {boolean}
+ */
+export function isRelative(option: OperatorOption | null | undefined): boolean;
+/**
+ * The days a relative value counts back, `` `today(-30)` `` reading 30.
+ *
+ * @param {any} value
+ * @returns {number|null}
+ */
+export function relativeDays(value: any): number | null;
+/**
+ * The expression of a number of days back from today, evaluated by the server
+ * each time the filter is read.
+ *
+ * @param {number|null|undefined} days
+ * @returns {string|undefined}
+ */
+export function relativeValue(days: number | null | undefined): string | undefined;
+/**
+ * What the menu remembers of an option on the rule, when its operator alone
+ * would read as another one.
+ *
+ * @param {OperatorOption} option
+ * @returns {string|undefined}
+ */
+export function uiOf(option: OperatorOption): string | undefined;
 /**
  * A datetime option written from the days a person picked.
  *
@@ -84,7 +115,8 @@ export function keepOnFieldChange(metadatas: Record<string, any> | null, before:
 };
 export type OperatorOption = {
     /**
-     * - What the menu selects: the operator, or `on` for a datetime on a day
+     * - What the menu selects: the operator, `on` for a datetime on a day, `in the last` or
+     * `more than` for a number of days before today
      */
     id: string;
     /**

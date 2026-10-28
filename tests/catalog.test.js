@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
-import { convertValue, keepOnFieldChange, kindOf, operatorOptions, optionOfRule } from '../catalog.js';
+import {
+    convertValue,
+    keepOnFieldChange,
+    kindOf,
+    operatorOptions,
+    optionOfRule,
+    relativeDays,
+    relativeValue,
+    uiOf,
+} from '../catalog.js';
 import { coversOneDay, dayEnd, dayOf, dayStart } from '../dates.js';
 import { METADATAS } from './fixtures.js';
 
@@ -76,5 +85,54 @@ describe('the catalog of operators', () => {
             operator: 'between',
             ui: 'on',
         });
+    });
+});
+
+describe('the days counted back from today', () => {
+    const options = operatorOptions(METADATAS, fields.created_at);
+    const by = (id) => options.find((option) => option.id === id);
+
+    it('offers them on a date, written as an expression the server evaluates', () => {
+        expect(ids(options)).toEqual(expect.arrayContaining(['in the last', 'more than']));
+        expect(by('in the last').operator).toBe('>=');
+        expect(by('more than').operator).toBe('<');
+        expect(relativeValue(30)).toBe('`today(-30)`');
+        expect(relativeValue(0)).toBeUndefined();
+        expect(relativeDays('`today(-30)`')).toBe(30);
+        expect(relativeDays('2026-10-08')).toBeNull();
+    });
+
+    it('reads a stored rule back as the option that wrote it, and a plain day as a plain operator', () => {
+        expect(optionOfRule(options, { operator: '>=', value: '`today(-30)`' }).id).toBe('in the last');
+        expect(optionOfRule(options, { operator: '<', value: '`today(-90)`' }).id).toBe('more than');
+        expect(optionOfRule(options, { operator: '>=', value: dayStart('2026-10-08') }).id).toBe('>=');
+        expect(optionOfRule(options, { operator: '>=', value: undefined, ui: 'in the last' }).id).toBe('in the last');
+        expect(uiOf(by('in the last'))).toBe('in the last');
+        expect(uiOf(by('>='))).toBeUndefined();
+    });
+
+    it('keeps the days from one relative option to the other, and nothing to a day', () => {
+        expect(convertValue('datetime', by('in the last'), by('more than'), '`today(-30)`')).toBe('`today(-30)`');
+        expect(convertValue('datetime', by('in the last'), by('<'), '`today(-30)`')).toBeUndefined();
+        expect(convertValue('datetime', by('<'), by('in the last'), dayStart('2026-10-08'))).toBeUndefined();
+    });
+});
+
+describe('a JSON field', () => {
+    const details = {
+        name: 'details',
+        label: 'Details',
+        type: 'json',
+        filter_operators: ['contains', 'not contains', 'is empty', 'is not empty'],
+    };
+
+    it('offers what it contains, and whether it is empty', () => {
+        expect(kindOf(details)).toBe('json');
+        expect(ids(operatorOptions(METADATAS, details))).toEqual([
+            'contains',
+            'not contains',
+            'is empty',
+            'is not empty',
+        ]);
     });
 });
