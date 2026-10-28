@@ -17,6 +17,7 @@ export { default as QueryFilterHeader } from './components/parts/QueryFilterHead
 export { default as QueryFilterJoint } from './components/parts/QueryFilterJoint.vue';
 export { default as QueryFilterGroup } from './components/parts/QueryFilterGroup.vue';
 export { default as QueryFilterRule } from './components/parts/QueryFilterRule.vue';
+export { default as QueryFilterAlias } from './components/parts/QueryFilterAlias.vue';
 export { default as QueryFilterAnyBlock } from './components/parts/QueryFilterAnyBlock.vue';
 export { default as QueryFilterField } from './components/parts/QueryFilterField.vue';
 export { default as QueryFilterOperator } from './components/parts/QueryFilterOperator.vue';
@@ -42,10 +43,17 @@ export {
 } from './composables/controls.js';
 export { provideQueryFilterIcons, queryFilterIconNames, useQueryFilterIcons } from './composables/icons.js';
 export { queryFilterDefaults, useQueryFilterOptions } from './composables/options.js';
-export { registerFilterInput, registerValueSource, resolveFilterInput } from './composables/registry.js';
+export {
+    filterAliasesOf,
+    registerFilterAlias,
+    registerFilterInput,
+    registerValueSource,
+    resolveFilterInput,
+} from './composables/registry.js';
 export { defaultValueSource, resolveValueSource } from './composables/value-source.js';
 export { useCompact, useMedia } from './composables/adaptive.js';
 export { useDeferredValue } from './composables/deferred.js';
+export * from './aliases.js';
 export * from './catalog.js';
 export * from './dates.js';
 export { say, sayCount } from './labels.js';

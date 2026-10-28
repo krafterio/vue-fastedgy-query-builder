@@ -3,9 +3,11 @@ import { DialogRoot, PopoverRoot } from 'reka-ui';
 import { computed, ref, shallowRef, watch } from 'vue';
 import { sameExpression, useCustomViews, useMetadataStore, useQueryExpression } from 'vue-fastedgy';
 
+import { readAliases } from '../../aliases.js';
 import { useCompact } from '../../composables/adaptive.js';
 import { provideQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterOptions } from '../../composables/options.js';
+import { filterAliasesOf } from '../../composables/registry.js';
 
 /**
  * The root of a query filter: the tree of conditions over the expression of a
@@ -58,6 +60,12 @@ void useMetadataStore()
     .catch(() => (metadatas.value = {}));
 
 const query = useQueryExpression(() => (props.list ? props.list.expression.value : expression.value));
+
+watch(
+    () => query.tree.value,
+    (tree) => readAliases(tree, filterAliasesOf(props.model)),
+    { immediate: true }
+);
 
 watch(query.expression, (next) => {
     if (props.list) {

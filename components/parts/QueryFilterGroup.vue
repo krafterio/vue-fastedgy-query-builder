@@ -4,9 +4,11 @@ import { computed } from 'vue';
 import { injectQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterControls } from '../../composables/controls.js';
 import { useQueryFilterIcons } from '../../composables/icons.js';
+import { filterAliasesOf } from '../../composables/registry.js';
 import { say } from '../../labels.js';
 import QueryFilterAddGroup from './QueryFilterAddGroup.vue';
 import QueryFilterAddRule from './QueryFilterAddRule.vue';
+import QueryFilterAlias from './QueryFilterAlias.vue';
 import QueryFilterAnyBlock from './QueryFilterAnyBlock.vue';
 import QueryFilterJoint from './QueryFilterJoint.vue';
 import QueryFilterRule from './QueryFilterRule.vue';
@@ -43,6 +45,11 @@ const joint = computed(() => (node.value.joint === '|' ? say('Or') : say('And'))
 const above = computed(() => context.settings.value.jointAbove);
 
 const toggleJoint = () => context.query.setJoint(node.value.id, node.value.joint === '|' ? '&' : '|');
+
+const aliasOfNode = (child) =>
+    child.kind === 'opaque' && child.alias
+        ? (filterAliasesOf(model.value).find((one) => one.name === child.alias.name) ?? null)
+        : null;
 </script>
 
 <template>
@@ -83,7 +90,14 @@ const toggleJoint = () => context.query.setJoint(node.value.id, node.value.joint
                 <template v-else>{{ joint }}</template>
             </span>
 
-            <slot v-if="child.kind === 'rule' || child.kind === 'opaque'" name="rule" :rule="child" :model="model">
+            <QueryFilterAlias
+                v-if="aliasOfNode(child)"
+                :node="child"
+                :model="model"
+                :path="path"
+                :alias="aliasOfNode(child)"
+            />
+            <slot v-else-if="child.kind === 'rule' || child.kind === 'opaque'" name="rule" :rule="child" :model="model">
                 <QueryFilterRule :rule="child" :model="model" :path="path" />
             </slot>
             <QueryFilterGroup

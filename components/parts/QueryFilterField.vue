@@ -17,19 +17,22 @@ import {
     PopoverTrigger,
 } from 'reka-ui';
 import { computed, onMounted, ref, watch } from 'vue';
-import { filterableFields, relationKindOf } from 'vue-fastedgy';
+import { createRule, filterableFields, relationKindOf } from 'vue-fastedgy';
 
+import { aliasNode, sayAlias } from '../../aliases.js';
 import { keepOnFieldChange } from '../../catalog.js';
 import { injectQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterControls } from '../../composables/controls.js';
 import { useQueryFilterIcons } from '../../composables/icons.js';
+import { filterAliasesOf } from '../../composables/registry.js';
 import { say } from '../../labels.js';
 import ScrollBox from '../internal/ScrollBox.vue';
 
 /**
  * The field of a condition, chosen in a list of the filterable fields that
  * walks into the relations: a chevron opens the fields of the related model,
- * the name of the relation chooses the relation itself.
+ * the name of the relation chooses the relation itself. The aliases of the
+ * model come first, where the list starts.
  */
 const props = defineProps({
     rule: { type: Object, required: true },
@@ -38,6 +41,8 @@ const props = defineProps({
     /** The relation path of the enclosing block, for the excluded paths. */
     path: { type: String, default: '' },
     resolved: { type: Object, default: null },
+    /** What the chip says instead of the path, for an alias. */
+    label: { type: String, default: '' },
 });
 
 const context = injectQueryFilterContext();
@@ -50,8 +55,10 @@ const search = ref('');
 
 const metadatas = computed(() => context.metadatas.value ?? {});
 
-const chip = computed(() =>
-    props.resolved ? props.resolved.chain.map((link) => link.field.label).join(' › ') : say('Choose a field')
+const chip = computed(
+    () =>
+        props.label ||
+        (props.resolved ? props.resolved.chain.map((link) => link.field.label).join(' › ') : say('Choose a field'))
 );
 
 const modelAt = (names) => {
@@ -115,8 +122,19 @@ const fieldsAt = (model, names) =>
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
 
+const aliases = computed(() =>
+    levels.value.length === 0 && !props.path
+        ? filterAliasesOf(props.model).map((alias) => ({
+              path: `alias:${alias.name}`,
+              label: sayAlias(alias.label),
+              alias,
+              relation: false,
+          }))
+        : []
+);
+
 const entries = computed(() => {
-    const own = fieldsAt(levelModel.value, levels.value);
+    const own = [...aliases.value, ...fieldsAt(levelModel.value, levels.value)];
     const text = fold(search.value);
 
     if (!text) {
@@ -155,10 +173,29 @@ onMounted(() => {
 });
 
 const choose = (entry) => {
+    open.value = false;
+
+    if (entry.alias) {
+        context.query.replace(props.rule.id, aliasNode(entry.alias, undefined, undefined, props.rule.id));
+
+        return;
+    }
+
+    if (props.rule.kind === 'opaque') {
+        const next = keepOnFieldChange(metadatas.value, null, entry.field, { operator: '' });
+
+        context.query.replace(props.rule.id, {
+            ...createRule(entry.path, next.operator, next.value),
+            id: props.rule.id,
+            ui: next.ui,
+        });
+
+        return;
+    }
+
     const next = keepOnFieldChange(metadatas.value, props.resolved?.field ?? null, entry.field, props.rule);
 
     context.query.update(props.rule.id, { field: entry.path, ...next });
-    open.value = false;
 };
 
 const enter = (entry) => {

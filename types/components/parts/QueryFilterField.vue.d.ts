@@ -30,6 +30,11 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
         type: ObjectConstructor;
         default: null;
     };
+    /** What the chip says instead of the path, for an alias. */
+    label: {
+        type: StringConstructor;
+        default: string;
+    };
 }>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     rule: {
         type: ObjectConstructor;
@@ -49,7 +54,13 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
         type: ObjectConstructor;
         default: null;
     };
+    /** What the chip says instead of the path, for an alias. */
+    label: {
+        type: StringConstructor;
+        default: string;
+    };
 }>> & Readonly<{}>, {
+    label: string;
     path: string;
     resolved: Record<string, any>;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;

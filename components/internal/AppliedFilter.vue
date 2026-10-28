@@ -2,9 +2,11 @@
 import { computed, reactive, watch } from 'vue';
 import { arityOf, countConditions, resolveFieldPath } from 'vue-fastedgy';
 
+import { sayAlias } from '../../aliases.js';
 import { datetimeDays, isRelative, kindOf, operatorOptions, optionOfRule, relativeDays } from '../../catalog.js';
 import { injectQueryFilterContext } from '../../composables/context.js';
 import { useQueryFilterIcons } from '../../composables/icons.js';
+import { filterAliasesOf } from '../../composables/registry.js';
 import { resolveValueSource } from '../../composables/value-source.js';
 import { say, sayCount } from '../../labels.js';
 
@@ -29,7 +31,18 @@ const nameOf = (path, field) => path?.chain.map((link) => link.field.label).join
 
 const resolved = computed(() => (props.node.kind === 'rule' && props.node.field ? pathOf(props.node.field) : null));
 const kind = computed(() => kindOf(resolved.value?.field));
-const target = ['single', 'multiple'].includes(kind.value) ? (resolved.value?.target ?? null) : null;
+const alias = props.node.alias
+    ? (filterAliasesOf(context.props.model).find((one) => one.name === props.node.alias.name) ?? null)
+    : null;
+const aliasOption = computed(() =>
+    alias ? (alias.options.find((one) => one.id === props.node.alias.option) ?? null) : null
+);
+const shown = () => (alias ? props.node.alias.value : props.node.value);
+const target = alias
+    ? (aliasOption.value?.value?.target ?? null)
+    : ['single', 'multiple'].includes(kind.value)
+      ? (resolved.value?.target ?? null)
+      : null;
 const source = target
     ? resolveValueSource(target, {
           prefix: context.props.prefix,
@@ -40,7 +53,7 @@ const source = target
 const names = reactive(new Map());
 
 watch(
-    () => (source ? [props.node.value].flat().filter((id) => id !== null && id !== undefined && !names.has(id)) : []),
+    () => (source ? [shown()].flat().filter((id) => id !== null && id !== undefined && !names.has(id)) : []),
     (missing) => {
         if (missing.length === 0) {
             return;
@@ -101,10 +114,28 @@ const ruleLabel = () => {
         : `${field} ${say(option.label)} ${text}`;
 };
 
+const aliasLabel = () => {
+    const typed = aliasOption.value?.value;
+    const said = [sayAlias(alias.label), aliasOption.value ? sayAlias(aliasOption.value.label) : ''];
+
+    if (typed && relativeDays(shown()) !== null) {
+        said.push(`${relativeDays(shown())} ${say(typed.option === 'more than' ? 'days ago' : 'days')}`);
+    } else if (typed) {
+        said.push(
+            [shown()]
+                .flat()
+                .map((one) => (target ? (names.get(one) ?? `#${one}`) : String(one ?? '')))
+                .join(', ')
+        );
+    }
+
+    return said.filter(Boolean).join(' ');
+};
+
 const label = computed(() => {
     switch (props.node.kind) {
         case 'opaque':
-            return JSON.stringify(props.node.raw);
+            return alias ? aliasLabel() : JSON.stringify(props.node.raw);
         case 'rule':
             return resolved.value ? ruleLabel() : props.node.field;
         case 'any':

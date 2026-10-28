@@ -26,6 +26,8 @@ const props = defineProps({
     resolved: { type: Object, required: true },
     options: { type: Array, required: true },
     option: { type: Object, default: null },
+    /** Chooses the option itself, for a row that is not a rule (an alias). */
+    select: { type: Function, default: null },
 });
 
 const context = injectQueryFilterContext();
@@ -34,6 +36,12 @@ const controls = useQueryFilterControls();
 const kind = computed(() => kindOf(props.resolved.field));
 
 const choose = (id) => {
+    if (props.select) {
+        props.select(id);
+
+        return;
+    }
+
     const next = props.options.find((one) => one.id === id);
 
     if (!next) {

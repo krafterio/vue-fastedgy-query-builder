@@ -29,6 +29,11 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
         type: ObjectConstructor;
         default: null;
     };
+    /** Chooses the option itself, for a row that is not a rule (an alias). */
+    select: {
+        type: FunctionConstructor;
+        default: null;
+    };
 }>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     rule: {
         type: ObjectConstructor;
@@ -46,8 +51,14 @@ declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractP
         type: ObjectConstructor;
         default: null;
     };
+    /** Chooses the option itself, for a row that is not a rule (an alias). */
+    select: {
+        type: FunctionConstructor;
+        default: null;
+    };
 }>> & Readonly<{}>, {
     option: Record<string, any>;
+    select: Function;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 import { SelectTrigger } from 'reka-ui';
 import { SelectItemText } from 'reka-ui';

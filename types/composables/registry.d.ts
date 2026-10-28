@@ -50,6 +50,35 @@ export function registerValueSource(target: string, source: ValueSource | ((cont
 export function registeredValueSource(target: string, local?: Record<string, any>): ValueSource | ((context: {
     prefix: string;
 }) => ValueSource) | null;
+/**
+ * Offer a pseudo field on a model: an alias the field picker lists with the
+ * fields, written as the expression it stands for, and read back as itself.
+ * An alias of the same name on the model replaces it.
+ *
+ * @param {string} model - The metadata name of the model
+ * @param {import('../aliases.js').FilterAlias} alias
+ *
+ * @example
+ * registerFilterAlias('contact', {
+ *     name: 'opened',
+ *     label: 'Opened an email',
+ *     options: [
+ *         {
+ *             id: 'in the last',
+ *             label: 'in the last',
+ *             expression: ['emails', 'any', [['opened_at', '>=', QUERY_VALUE]]],
+ *             value: { type: 'datetime', operator: '>=', option: 'in the last' },
+ *         },
+ *         { id: 'never', label: 'never', expression: ['emails', 'not any', [['opened_at', 'is not empty']]] },
+ *     ],
+ * });
+ */
+export function registerFilterAlias(model: string, alias: import("../aliases.js").FilterAlias): void;
+/**
+ * @param {string} model
+ * @returns {Array<import('../aliases.js').FilterAlias>}
+ */
+export function filterAliasesOf(model: string): Array<import("../aliases.js").FilterAlias>;
 export type ValueSource = {
     /**
      * - What lists the records, an api model or alike

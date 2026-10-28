@@ -19,7 +19,7 @@
         "build": "vue-tsc -p tsconfig.json",
         "lint": "npm run build && oxlint . --type-aware",
         "fix": "oxlint --fix",
-        "format": "oxfmt --write index.js plugin.js catalog.js dates.js labels.js inputs.js icons components composables locales tests vitest.config.js vitest.setup.js",
+        "format": "oxfmt --write index.js plugin.js aliases.js catalog.js dates.js labels.js inputs.js icons components composables locales tests vitest.config.js vitest.setup.js",
         "fcl": "npm run fix && npm run format && npm run lint",
         "test": "vitest run",
         "test:watch": "vitest"
