@@ -147,6 +147,7 @@ describe('an alias in the conditions', () => {
         await settle();
 
         expect(chipsOf(row('admin'))).toEqual(['Has an admin', 'yes']);
+        expect(row('admin').querySelector('[data-part="field"]').hasAttribute('data-empty')).toBe(false);
         expect(body().querySelectorAll('[data-slot="query-filter-rule"]')).toHaveLength(2);
         expect(written).toEqual([]);
     });

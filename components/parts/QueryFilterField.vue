@@ -219,7 +219,7 @@ const onSelect = (path) => {
 <template>
     <component :is="context.compact.value ? DialogRoot : PopoverRoot" v-model:open="open">
         <component :is="context.compact.value ? DialogTrigger : PopoverTrigger" as-child>
-            <component :is="controls.chip" data-part="field" :empty="!resolved">{{ chip }}</component>
+            <component :is="controls.chip" data-part="field" :empty="!resolved && !label">{{ chip }}</component>
         </component>
 
         <component :is="context.compact.value ? DialogPortal : PopoverPortal">
